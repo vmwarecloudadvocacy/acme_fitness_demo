@@ -1,0 +1,82 @@
+version: '3'
+
+services: 
+    mongo-db:
+      image: mongo:4
+      hostname: mongo-db
+      ports:
+        - '27017:27017'
+      environment:
+        - MONGO_INITDB_ROOT_USERNAME=mongoadmin 
+        - MONGO_INITDB_ROOT_PASSWORD=secret
+      cap_drop:
+        - all
+      cap_add:
+        - CHOWN
+        - SETGID
+        - SETUID
+      tmpfs:
+        - /tmp:rw,noexec,nosuid
+    front-end:
+       build: /home/shri/code/vcs-fitcycle-tar/vcs_acme_fitness/front-end/front_end/.
+       hostname: front-end
+       restart: always
+       ports:
+          - '3000:3000'
+       cap_add:
+           - NET_BIND_SERVICE
+       read_only: true
+       environment:
+           - USERS_SVC_NAME=users
+           - CATALOG_SVC_NAME=catalog
+           - CART_SVC_NAME=cart   
+    users:
+       build: /home/shri/code/vcs-fitcycle-tar/vcs_acme_fitness/go/src/github.com/ishrivatsa/user/.
+       hostname: users
+       restart: always
+       cap_add:
+           - NET_BIND_SERVICE
+       environment:
+           - USERS_DB_USERNAME=mongoadmin
+           - USERS_DB_SECRET=secret
+           - USERS_DB_ENDPOINT=192.168.152.218
+           - USERS_PORT=80
+       depends_on:
+           - mongo-db    
+    catalog:
+        build: /home/shri/code/vcs-fitcycle-tar/vcs_acme_fitness/go/src/github.com/ishrivatsa/catalogservice/.
+        hostname: catalog
+        restart: always
+        cap_add:
+          - NET_BIND_SERVICE
+        environment:
+             - CATALOG_DB_USERNAME=mongoadmin
+             - CATALOG_DB_SECRET=secret
+             - CATALOG_DB_ENDPOINT=mongo-db
+             - CATALOG_PORT=80
+        depends_on:
+             - mongo-db
+    reddb:
+      image: redis:5.0.3-alpine
+      hostname: reddb
+      restart: always
+      ports:
+        - '6379:6379'
+    cart:
+      build: /home/shri/code/vcs-fitcycle-tar/vcs_acme_fitness/cart/cart/.
+      hostname: cart
+      restart: always
+      environment:
+          - REDIS_HOST=reddb
+          - REDIS_PORT=6379
+          - CART_PORT=80
+      ports:
+          - '5000:5000'
+      depends_on:
+          - reddb
+
+      
+      
+
+
+          
