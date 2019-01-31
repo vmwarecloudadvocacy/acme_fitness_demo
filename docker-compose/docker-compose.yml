@@ -18,7 +18,7 @@ services:
       tmpfs:
         - /tmp:rw,noexec,nosuid
     front-end:
-       build: /home/shri/code/vcs-fitcycle-tar/vcs_acme_fitness/front-end/front_end/.
+       image: gcr.io/vmwarecloudadvocacy/acmefitness-front-end
        hostname: front-end
        restart: always
        ports:
@@ -31,7 +31,7 @@ services:
            - CATALOG_SVC_NAME=catalog
            - CART_SVC_NAME=cart   
     users:
-       build: /home/shri/code/vcs-fitcycle-tar/vcs_acme_fitness/go/src/github.com/ishrivatsa/user/.
+       image: gcr.io/vmwarecloudadvocacy/acmefitness-users
        hostname: users
        restart: always
        cap_add:
@@ -44,7 +44,7 @@ services:
        depends_on:
            - mongo-db    
     catalog:
-        build: /home/shri/code/vcs-fitcycle-tar/vcs_acme_fitness/go/src/github.com/ishrivatsa/catalogservice/.
+        image: gcr.io/vmwarecloudadvocacy/acmefitness-catalog
         hostname: catalog
         restart: always
         cap_add:
@@ -63,7 +63,7 @@ services:
       ports:
         - '6379:6379'
     cart:
-      build: /home/shri/code/vcs-fitcycle-tar/vcs_acme_fitness/cart/cart/.
+      image: gcr.io/vmwarecloudadvocacy/acmefitness-cart
       hostname: cart
       restart: always
       environment:
