@@ -17,7 +17,7 @@ services:
       tmpfs:
         - /tmp:rw,noexec,nosuid
     front-end:
-       image: gcr.io/vmwarecloudadvocacy/acmefitness-front-end
+       image: gcr.io/vmwarecloudadvocacy/acmefitness-front-end:latest
        hostname: front-end
        restart: always
        ports:
@@ -28,9 +28,11 @@ services:
            - USERS_HOST=users
            - CATALOG_HOST=catalog
            - CART_HOST=cart   
+           - ORDER_HOST=order
            - USERS_PORT=8081
            - CATALOG_PORT=8082
            - CART_PORT=5000
+           - ORDER_PORT=6000
     users:
        image: gcr.io/vmwarecloudadvocacy/acmefitness-users
        hostname: users
@@ -81,6 +83,8 @@ services:
       image: gcr.io/vmwarecloudadvocacy/acmefitness-order
       hostname: order
       restart: always
+      ports:
+        - '6000:6000'
       environment:
           - PAYMENT_HOST=payment
           - ORDER_PORT=6000
