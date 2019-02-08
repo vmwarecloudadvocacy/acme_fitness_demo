@@ -42,11 +42,11 @@ services:
        hostname: front-end
        restart: always
        ports:
-          - '8080:8080'
+          - '3000:3000'
        cap_add:
            - NET_BIND_SERVICE
        environment:
-           - PORT=8080
+           - PORT=3000
            - USERS_HOST=user
            - CATALOG_HOST=catalog
            - CART_HOST=cart   
