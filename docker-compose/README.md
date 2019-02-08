@@ -3,7 +3,7 @@
 1. Run the following command
 
 ```
-sudo docker-compose up 
+sudo docker-compose pull && docker-compose up 
 
 ```
 
