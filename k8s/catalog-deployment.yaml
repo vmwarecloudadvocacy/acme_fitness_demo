@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.17.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: catalog
+  name: catalog
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: catalog
+    spec:
+      containers:
+      - env:
+        - name: CATALOG_DB_HOST
+          value: catalog-db
+        - name: CATALOG_DB_PASSWORD
+          value: secret
+        - name: CATALOG_DB_PORT
+          value: "27017"
+        - name: CATALOG_DB_USERNAME
+          value: mongoadmin
+        - name: CATALOG_PORT
+          value: "8082"
+        image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog:latest
+        name: catalog
+        resources: {}
+        securityContext:
+          capabilities:
+            add:
+            - NET_BIND_SERVICE
+      hostname: catalog
+      restartPolicy: Always
+status: {}

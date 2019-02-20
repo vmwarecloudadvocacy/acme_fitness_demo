@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.17.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: redis-db
+  name: redis-db
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: redis-db
+    spec:
+      containers:
+      - image: redis:5.0.3-alpine
+        name: redis-db
+        ports:
+        - containerPort: 6379
+        resources: {}
+      hostname: redis-db
+      restartPolicy: Always
+status: {}

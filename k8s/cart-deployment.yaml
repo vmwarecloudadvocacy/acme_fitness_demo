@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.17.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: cart
+  name: cart
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: cart
+    spec:
+      containers:
+      - env:
+        - name: CART_PORT
+          value: "5000"
+        - name: REDIS_HOST
+          value: redis-db
+        - name: REDIS_PORT
+          value: "6379"
+        image: gcr.io/vmwarecloudadvocacy/acmeshop-cart
+        name: cart
+        ports:
+        - containerPort: 5000
+        resources: {}
+      hostname: cart
+      restartPolicy: Always
+status: {}

@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.17.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: user-db
+  name: user-db
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: user-db
+    spec:
+      containers:
+      - env:
+        - name: MONGO_INITDB_DATABASE
+          value: acmefit
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: secret
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: mongoadmin
+        image: gcr.io/vmwarecloudadvocacy/acmeshop-user-db:latest
+        name: user-db
+        resources: {}
+        securityContext:
+          capabilities:
+            add:
+            - CHOWN
+            - SETGID
+            - SETUID
+        volumeMounts:
+        - mountPath: /tmp
+          name: user-db-tmpfs0
+      hostname: user-db
+      restartPolicy: Always
+      volumes:
+      - emptyDir:
+          medium: Memory
+        name: user-db-tmpfs0
+status: {}
