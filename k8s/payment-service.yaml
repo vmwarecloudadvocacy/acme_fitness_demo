@@ -6,8 +6,8 @@ metadata:
     kompose.version: 1.17.0 (HEAD)
   creationTimestamp: null
   labels:
-    io.kompose.service: order
-  name: order
+    io.kompose.service: payment
+  name: payment
 spec:
   ports:
   - name: payment-port
