@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cart-redis
+  labels:
+    app: fitcycle
+spec:
+  ports:
+    - port: 6379
+      name: cart-redis
+  clusterIP: None
+  selector:
+    app: fitcycle
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  selector:
+    matchLabels:
+      app: redis  # has to match .spec.template.metadata.labels
+  serviceName: redis
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: redis  # has to match .spec.selector.matchLabels
+    spec:
+      containers:
+        - name: cart-redis
+          image: redis:5.0.3-alpine
+          command:
+            - "redis-server"
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "100Mi"
+          ports:
+            - name: redis
+              containerPort: 6379
+              protocol: "TCP"
+          env:
+          - name: REDIS-HOST
+            valueFrom:
+              secretKeyRef:
+                name: redis-host
+                key: 'cart-redis'
+          - name: REDIS_PASS
+            valueFrom:
+              secretKeyRef:
+                name: redis-pass
+                key: ''
+          volumeMounts:
+            - mountPath: /var/lib/redis
+              name: redis-data
+#            - mountPath: /etc/redis
+#              name: redis-config
+      volumes:
+        - name: redis-data
+          emptyDir: {}
+#        - name: redis-config
+#          configMap:
+#            name: redis-config
+#            items:
+#              - key: redis-config
+#                path: redis.conf
