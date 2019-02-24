@@ -1,0 +1,67 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: order-mongo
+  labels:
+    app: fitcycle
+    service: order
+spec:
+  selector:
+    matchLabels:
+      app: fitcycle  # has to match .spec.template.metadata.labels
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: fitcycle  # has to match .spec.selector.matchLabels
+        service: order
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: order-mongo
+          image: mongo
+          command:
+             - mongod
+             - "--replSet"
+             - rs0
+             - "--smallfiles"
+             - "--noprealloc"
+          ports:
+            - name: order-mongo
+              containerPort: 27017
+              protocol: "TCP"
+     volumeMounts:
+
+       - name: mongo-persistent-storage
+
+         mountPath: /data/db
+
+   - name: mongo-sidecar
+
+     image: cvallance/mongo-k8s-sidecar
+
+     env:
+
+       - name: MONGO\_SIDECAR\_POD\_LABELS
+
+         value: "role=mongo,environment=test"
+
+ volumeClaimTemplates:
+
+ - metadata:
+
+ name: mongo-persistent-storage
+
+ annotations:
+
+   volume.beta.kubernetes.io/storage-class: "fast"
+
+ spec:
+
+ accessModes: ["ReadWriteOnce"]
+
+ resources:
+
+   requests:
+
+     storage: 100Gi

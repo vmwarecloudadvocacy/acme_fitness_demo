@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-mongo
+  labels:
+    app: fitcycle
+    service: order-db
+spec:
+  ports:
+    - port: 27017
+      name: order-mongo
+      protocol: TCP
+  clusterIP: None
+  selector:
+    app: fitcycle
+    service: order-db
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: order-mongo
+  labels:
+    app: fitcycle
+    service: order-db
+spec:
+  selector:
+    matchLabels:
+      app: fitcycle  # has to match .spec.template.metadata.labels
+      service: order-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: fitcycle  # has to match .spec.selector.matchLabels
+        service: order-db
+    spec:
+      containers:
+        - name: order-mongo
+          image: mongo:4
+          resources:
+            {}
+          ports:
+            - name: order-mongo
+              containerPort: 27017
+              protocol: "TCP"
+          env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            value: 'mongoadmin'
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: order-mongo-pass
+                key: password
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongodata
+      volumes:
+        - name: mongodata
+          emptyDir: {}
+#        - name: mongodata
+#          persistentVolumeClaim:
+#            claimName: mongodata
