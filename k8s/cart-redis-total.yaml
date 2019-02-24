@@ -4,6 +4,7 @@ metadata:
   name: cart-redis
   labels:
     app: fitcycle
+    service: cart
 spec:
   ports:
     - port: 6379
@@ -15,17 +16,19 @@ spec:
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: redis
+  name: cart-redis
+  labels:
+    app: fitcycle
+    service: cart
 spec:
   selector:
     matchLabels:
-      app: redis  # has to match .spec.template.metadata.labels
-  serviceName: redis
+      app: fitcycle  # has to match .spec.template.metadata.labels
   replicas: 1
   template:
     metadata:
       labels:
-        app: redis  # has to match .spec.selector.matchLabels
+        app: fitcycle  # has to match .spec.selector.matchLabels
     spec:
       containers:
         - name: cart-redis
@@ -43,15 +46,12 @@ spec:
               protocol: "TCP"
           env:
           - name: REDIS-HOST
-            valueFrom:
-              secretKeyRef:
-                name: redis-host
-                key: 'cart-redis'
+            value: 'cart-redis'
           - name: REDIS_PASS
             valueFrom:
               secretKeyRef:
                 name: redis-pass
-                key: ''
+                key: password
           volumeMounts:
             - mountPath: /var/lib/redis
               name: redis-data
