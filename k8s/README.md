@@ -16,7 +16,7 @@ kubectl create secret generic order-mongo-pass --from-literal=password=password
 
 ## catalog
 
-Before running order please add the following secret
+Before running catalog please add the following secret
 ```
 kubectl create secret generic catalog-mongo-pass --from-literal=password=password
 ```
@@ -24,6 +24,20 @@ kubectl create secret generic catalog-mongo-pass --from-literal=password=passwor
 Next you need to run the following:
 ```
 kubectl create -f catalog-db-initdb-configmap.yaml
+```
+
+This will initialize the DB with the catalog items.
+
+## users
+
+Before running users please add the following secret
+```
+kubectl create secret generic users-mongo-pass --from-literal=password=password
+```
+
+Next you need to run the following:
+```
+kubectl create -f users-db-initdb-configmap.yaml
 ```
 
 This will initialize the DB with the catalog items.
