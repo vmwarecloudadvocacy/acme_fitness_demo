@@ -46,6 +46,8 @@ spec:
           env:
           - name: MONGO_INITDB_ROOT_USERNAME
             value: 'mongoadmin'
+          - name: MONGO_INITDB_DATABASE
+            value: 'acmefit'
           - name: MONGO_INITDB_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
