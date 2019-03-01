@@ -4,6 +4,7 @@ metadata:
   name: frontend
   labels:
     app: acmefit
+    service: frontend
 spec:
   ports:
     - name: frontend
@@ -12,6 +13,7 @@ spec:
       nodePort: 30430
   selector:
     app: acmefit
+    service: frontend
   type: NodePort
 ---
 apiVersion: apps/v1 # for versions before 1.8.0 use apps/v1beta1
@@ -20,10 +22,12 @@ metadata:
   name: frontend
   labels:
     app: acmefit
+    service: frontend
 spec:
   selector:
     matchLabels:
       app: acmefit
+      service: frontend
   strategy:
     type: Recreate
   replicas: 1
@@ -31,6 +35,7 @@ spec:
     metadata:
       labels:
         app: acmefit
+        service: frontend
     spec:
       containers:
       - image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end

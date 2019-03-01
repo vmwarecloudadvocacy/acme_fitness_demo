@@ -7,7 +7,7 @@ metadata:
     service: order-db
 spec:
   ports:
-    - port: 27018
+    - port: 27017
       name: order-mongo
       protocol: TCP
   clusterIP: None
@@ -41,7 +41,7 @@ spec:
             {}
           ports:
             - name: order-mongo
-              containerPort: 27018
+              containerPort: 27017
               protocol: "TCP"
           env:
           - name: MONGO_INITDB_ROOT_USERNAME
