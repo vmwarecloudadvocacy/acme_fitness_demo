@@ -9,7 +9,7 @@ spec:
   ports:
     - name: users
       protocol: TCP
-      port: 8082
+      port: 8081
       nodePort: 30435
   selector:
     app: acmefit
@@ -56,9 +56,9 @@ spec:
         - name: USERS_DB_USERNAME
           value: 'mongoadmin'
         - name: USERS_PORT
-          value: '8082'
+          value: '8081'
         ports:
-        - containerPort: 8082
+        - containerPort: 8081
           name: users
         volumeMounts:
         - mountPath: "/data"
