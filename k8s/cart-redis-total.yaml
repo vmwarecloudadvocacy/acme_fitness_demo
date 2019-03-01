@@ -12,6 +12,7 @@ spec:
   clusterIP: None
   selector:
     app: acmefit
+    service: cart-redis
 ---
 apiVersion: apps/v1beta2
 kind: Deployment
@@ -24,11 +25,13 @@ spec:
   selector:
     matchLabels:
       app: acmefit  # has to match .spec.template.metadata.labels
+      service: cart-redis
   replicas: 1
   template:
     metadata:
       labels:
         app: acmefit  # has to match .spec.selector.matchLabels
+        service: cart-redis
     spec:
       containers:
         - name: cart-redis
