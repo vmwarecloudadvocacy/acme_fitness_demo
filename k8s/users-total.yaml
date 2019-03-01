@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: users
   labels:
-    app: fitcycle
+    app: acmefit
     service: users
 spec:
   ports:
@@ -12,7 +12,7 @@ spec:
       port: 8082
       nodePort: 30435
   selector:
-    app: fitcycle
+    app: acmefit
     service: users
   type: NodePort
 ---
@@ -21,12 +21,12 @@ kind: Deployment
 metadata:
   name: users
   labels:
-    app: fitcycle
+    app: acmefit
     service: users
 spec:
   selector:
     matchLabels:
-      app: fitcycle
+      app: acmefit
       service: users
   strategy:
     type: Recreate
@@ -34,11 +34,11 @@ spec:
   template:
     metadata:
       labels:
-        app: fitcycle
+        app: acmefit
         service: users
     spec:
       volumes:
-      - name: fitcycle-users-data
+      - name: acmefit-users-data
         emptyDir: {}
       containers:
       - image: gcr.io/vmwarecloudadvocacy/acmeshop-user:latest
@@ -62,7 +62,7 @@ spec:
           name: users
         volumeMounts:
         - mountPath: "/data"
-          name: "fitcycle-users-data"
+          name: "acmefit-users-data"
         resources:
           requests:
             memory: "64Mi"

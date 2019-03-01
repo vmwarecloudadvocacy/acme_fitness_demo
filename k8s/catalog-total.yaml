@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: catalog
   labels:
-    app: fitcycle
+    app: acmefit
     service: catalog
 spec:
   ports:
@@ -12,7 +12,7 @@ spec:
       port: 8082
       nodePort: 30434
   selector:
-    app: fitcycle
+    app: acmefit
     service: catalog
   type: NodePort
 ---
@@ -21,12 +21,12 @@ kind: Deployment
 metadata:
   name: catalog
   labels:
-    app: fitcycle
+    app: acmefit
     service: catalog
 spec:
   selector:
     matchLabels:
-      app: fitcycle
+      app: acmefit
       service: catalog
   strategy:
     type: Recreate
@@ -34,11 +34,11 @@ spec:
   template:
     metadata:
       labels:
-        app: fitcycle
+        app: acmefit
         service: catalog
     spec:
       volumes:
-      - name: fitcycle-catalog-data
+      - name: acmefit-catalog-data
         emptyDir: {}
       containers:
       - image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog:latest
@@ -62,7 +62,7 @@ spec:
           name: catalog
         volumeMounts:
         - mountPath: "/data"
-          name: "fitcycle-catalog-data"
+          name: "acmefit-catalog-data"
         resources:
           requests:
             memory: "64Mi"

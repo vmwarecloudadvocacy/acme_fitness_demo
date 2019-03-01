@@ -3,32 +3,32 @@ kind: Service
 metadata:
   name: cart-redis
   labels:
-    app: fitcycle
-    service: cart
+    app: acmefit
+    service: cart-redis
 spec:
   ports:
     - port: 6379
       name: cart-redis
   clusterIP: None
   selector:
-    app: fitcycle
+    app: acmefit
 ---
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: cart-redis
   labels:
-    app: fitcycle
+    app: acmefit
     service: cart
 spec:
   selector:
     matchLabels:
-      app: fitcycle  # has to match .spec.template.metadata.labels
+      app: acmefit  # has to match .spec.template.metadata.labels
   replicas: 1
   template:
     metadata:
       labels:
-        app: fitcycle  # has to match .spec.selector.matchLabels
+        app: acmefit  # has to match .spec.selector.matchLabels
     spec:
       containers:
         - name: cart-redis

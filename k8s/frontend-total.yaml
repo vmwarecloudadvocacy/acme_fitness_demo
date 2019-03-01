@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: frontend
   labels:
-    app: fitshop
+    app: acmefit
 spec:
   ports:
     - name: frontend
@@ -11,7 +11,7 @@ spec:
       port: 3000
       nodePort: 30400
   selector:
-    app: fitshop
+    app: acmefit
   type: NodePort
 ---
 apiVersion: apps/v1 # for versions before 1.8.0 use apps/v1beta1
@@ -19,18 +19,18 @@ kind: Deployment
 metadata:
   name: frontend
   labels:
-    app: fitshop
+    app: acmefit
 spec:
   selector:
     matchLabels:
-      app: fitshop
+      app: acmefit
   strategy:
     type: Recreate
   replicas: 1
   template:
     metadata:
       labels:
-        app: fitshop
+        app: acmefit
     spec:
       containers:
       - image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end

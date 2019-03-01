@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: order
   labels:
-    app: fitcycle
+    app: acmefit
     service: order
 spec:
   ports:
@@ -12,7 +12,7 @@ spec:
       port: 5000
       nodePort: 30433
   selector:
-    app: fitcycle
+    app: acmefit
     service: order
   type: NodePort
 ---
@@ -21,12 +21,12 @@ kind: Deployment
 metadata:
   name: order
   labels:
-    app: fitcycle
+    app: acmefit
     service: order
 spec:
   selector:
     matchLabels:
-      app: fitcycle
+      app: acmefit
       service: order
   strategy:
     type: Recreate
@@ -34,11 +34,11 @@ spec:
   template:
     metadata:
       labels:
-        app: fitcycle
+        app: acmefit
         service: order
     spec:
       volumes:
-      - name: fitcycle-order-data
+      - name: acmefit-order-data
         emptyDir: {}
       containers:
       - image: gcr.io/vmwarecloudadvocacy/acmeshop-order:latest
@@ -62,7 +62,7 @@ spec:
           name: order
         volumeMounts:
         - mountPath: "/data"
-          name: "fitcycle-order-data"
+          name: "acmefit-order-data"
         resources:
           requests:
             memory: "64Mi"

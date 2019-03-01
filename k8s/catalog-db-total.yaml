@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: catalog-mongo
   labels:
-    app: fitcycle
+    app: acmefit
     service: catalog-db
 spec:
   ports:
@@ -12,7 +12,7 @@ spec:
       protocol: TCP
   clusterIP: None
   selector:
-    app: fitcycle
+    app: acmefit
     service: catalog-db
 ---
 apiVersion: apps/v1beta2
@@ -20,18 +20,18 @@ kind: Deployment
 metadata:
   name: catalog-mongo
   labels:
-    app: fitcycle
+    app: acmefit
     service: catalog-db
 spec:
   selector:
     matchLabels:
-      app: fitcycle  # has to match .spec.template.metadata.labels
+      app: acmefit  # has to match .spec.template.metadata.labels
       service: catalog-db
   replicas: 1
   template:
     metadata:
       labels:
-        app: fitcycle  # has to match .spec.selector.matchLabels
+        app: acmefit  # has to match .spec.selector.matchLabels
         service: catalog-db
     spec:
       containers:
