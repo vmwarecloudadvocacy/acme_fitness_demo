@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  labels:
+    app: fitshop
+spec:
+  ports:
+    - name: frontend
+      protocol: TCP
+      port: 3000
+      nodePort: 30400
+  selector:
+    app: fitshop
+  type: NodePort
+---
+apiVersion: apps/v1 # for versions before 1.8.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: fitshop
+spec:
+  selector:
+    matchLabels:
+      app: fitshop
+  strategy:
+    type: Recreate
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: fitshop
+    spec:
+      containers:
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end
+        name: frontend
+        env:
+        - name: FRONTEND_PORT
+          value: '3000'
+        - name: USERS_HOST
+          value: 'user'
+        - name: CATALOG_HOST
+          value: 'catalog'
+        - name: ORDER_HOST
+          value: 'order'
+        - name: USERS_PORT
+          value: '8081'
+        - name: CATALOG_PORT
+          value: '8082'
+        - name: CART_PORT
+          value: '5000'
+        - name: ORDER_PORT
+          value: '6000'
+        ports:
+        - containerPort: 3000
+          name: frontend
