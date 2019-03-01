@@ -44,6 +44,8 @@ spec:
           value: 'catalog'
         - name: ORDER_HOST
           value: 'order'
+        - name: CART_HOST
+          value: 'cart'
         - name: USERS_PORT
           value: '8081'
         - name: CATALOG_PORT

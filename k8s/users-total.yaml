@@ -52,7 +52,7 @@ spec:
               name: users-mongo-pass
               key: password
         - name: USERS_DB_PORT
-          value: '27017'
+          value: '27019'
         - name: USERS_DB_USERNAME
           value: 'mongoadmin'
         - name: USERS_PORT

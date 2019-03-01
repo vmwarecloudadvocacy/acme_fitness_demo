@@ -9,7 +9,7 @@ spec:
   ports:
     - name: order
       protocol: TCP
-      port: 5000
+      port: 6000
       nodePort: 30433
   selector:
     app: acmefit
@@ -52,13 +52,13 @@ spec:
               name: order-mongo-pass
               key: password
         - name: ORDER_DB_PORT
-          value: '27017'
+          value: '27018'
         - name: ORDER_DB_USERNAME
           value: 'mongoadmin'
         - name: ORDER_PORT
-          value: '5000'
+          value: '6000'
         ports:
-        - containerPort: 5000
+        - containerPort: 6000
           name: order
         volumeMounts:
         - mountPath: "/data"

@@ -19,7 +19,7 @@ metadata:
   name: cart-redis
   labels:
     app: acmefit
-    service: cart
+    service: cart-redis
 spec:
   selector:
     matchLabels:
