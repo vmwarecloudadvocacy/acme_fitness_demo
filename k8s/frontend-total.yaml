@@ -9,7 +9,7 @@ spec:
     - name: frontend
       protocol: TCP
       port: 3000
-      nodePort: 30400
+      nodePort: 30430
   selector:
     app: acmefit
   type: NodePort
