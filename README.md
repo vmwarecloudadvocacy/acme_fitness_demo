@@ -13,7 +13,7 @@ This section covers the deployment of the datastore dependent microservices. It 
 ### Cart Service
 
 Before deploying the cart datastore (Redis) and cart service please add a secret for the service to use in authenticating with the cache.
-*Note: Please replace ' <value> ' in the command below with the desired password text. Changing the name of the secret object or the 'password' key may cause deployment issues*
+*Note: Please replace 'value' in the command below with the desired password text. Changing the name of the secret object or the 'password' key may cause deployment issues*
 
 ```
 kubectl create secret generic redis-pass --from-literal=password=<value>
@@ -29,7 +29,7 @@ kubectl apply -f cart-total.yaml
 ### Catalog Service
 
 Before deploying the catalog datastore (mongo) and catalog service please add a secret for the service to use in authenticating with the cache.
-*Note: Please replace '<value>' in the command below with the desired password text. Changing the name of the secret object or the 'password' key may cause deployment issues*
+*Note: Please replace 'value' in the command below with the desired password text. Changing the name of the secret object or the 'password' key may cause deployment issues*
 
 ```
 kubectl create secret generic catalog-mongo-pass --from-literal=password=<value>
@@ -51,7 +51,7 @@ kubectl apply -f catalog-total.yaml
 ### Order Service
 
 Before deploying the orders datastore (mongo) and order service please add a secret for the service to use in authenticating with the cache.
-*Note: Please replace '<value>' in the command below with the desired password text. Changing the name of the secret object or the 'password' key may cause deployment issues*
+*Note: Please replace 'value' in the command below with the desired password text. Changing the name of the secret object or the 'password' key may cause deployment issues*
 
 Before running order please add the following secret:
 
@@ -69,7 +69,7 @@ kubectl apply -f order-total.yaml
 ### Users Service
 
 Before deploying the users datastore (mongo) and users service please add a secret for the service to use in authenticating with the cache.
-*Note: Please replace ' <value> ' in the command below with the desired password text. Changing the name of the secret object or the 'password' key may cause deployment issues*
+*Note: Please replace 'value' in the command below with the desired password text. Changing the name of the secret object or the 'password' key may cause deployment issues*
 
 Before running order please add the following secret:
 
