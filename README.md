@@ -47,7 +47,15 @@ Finally, deploy the mongo instance and catalog service:
 kubectl apply -f catalog-db-total.yaml
 kubectl apply -f catalog-total.yaml
 ```
+### Payment Service
 
+The payment service does not have an associated datastore. It can be deployed with the following command:
+
+```
+kubectl apply -f payment-total.yaml
+```
+   NOTE: PAYMENT SERVICE MUST BE UP FIRST IN ORDER FOR ORDER SERVICE TO PROPERLY COMPLETE TRANSACTIONS
+   
 ### Order Service
 
 Before deploying the orders datastore (mongo) and order service please add a secret for the service to use in authenticating with the cache.
@@ -92,13 +100,6 @@ kubectl apply -f users-total.yaml
 
 **_NOTE: The base set of users is preconfigured. For now, please login as one of this set (eric, dwight, han, or phoebe). The password for these users is 'vmware1!'_**
 
-### Payment Service
-
-The payment service does not have an associated datastore. It can be deployed with the following command:
-
-```
-kubectl apply -f payment-total.yaml
-```
 
 ### Front End Service
 
