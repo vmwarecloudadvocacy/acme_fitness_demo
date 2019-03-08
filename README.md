@@ -6,7 +6,7 @@ The contents here are the necessary YAML files to deploy the ACMEFIT application
 
 This app is developed by team behind www.beyondvirtual.io
 
-## Services with Datastores
+## Datastore Dependent Services
 
 This section covers the deployment of the datastore dependent microservices. It is recommended to deploy these services first.
 
@@ -99,6 +99,8 @@ The payment service does not have an associated datastore. It can be deployed wi
 ```
 kubectl apply -f payment-total.yaml
 ```
+
+## Datastore Independent Services
 
 ### Front End Service
 
