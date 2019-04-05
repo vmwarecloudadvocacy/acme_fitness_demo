@@ -10,13 +10,13 @@ spec:
     - name: payment
       protocol: TCP
       port: 9000
-      nodePort: 30432
+#      nodePort: 30432
   selector:
     app: acmefit
     service: payment
   type: NodePort
 ---
-apiVersion: apps/v1 # for versions before 1.8.0 use apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: payment
