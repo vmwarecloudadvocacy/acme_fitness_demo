@@ -4,7 +4,7 @@ This repo contains a Polyglot demo application comprised of (presently) 6 micros
 
 The contents here are the necessary YAML files to deploy the ACMEFIT application in a kubernetes cluster.
 
-This app is developed by team behind www.beyondvirtual.io
+This app is developed by team behind www.cloudjourney.io
 
 ## Datastore Dependent Services
 
