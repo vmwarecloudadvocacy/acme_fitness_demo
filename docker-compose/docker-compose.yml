@@ -67,8 +67,6 @@ services:
            - USERS_DB_HOST=user-db
            - USERS_DB_PORT=27017
            - USERS_PORT=8081
-       depends_on:
-           - user-db    
     catalog:
         image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog:latest
         hostname: catalog
@@ -117,7 +115,7 @@ services:
           - payment
           - order-db
     payment:
-      image: gcr.io/vmwarecloudadvocacy/acmeshop-payment
+      image: gcr.io/vmwarecloudadvocacy/acmeshop-payment:latest
       hostname: payment
       restart: always 
 
