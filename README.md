@@ -43,8 +43,8 @@ Other deployment modes coming soon
 
 3. Switch to the appropriate directory for deployment
 
-a. [docker-compose](docker-compose/README.md)
-b. [kubernetes-manifest](kubernetes-manifest/README.md)
+a. [docker-compose](docker-compose/README.md)  
+b. [kubernetes-manifest](kubernetes-manifests/README.md)  
 
 
 ### Additional Info
