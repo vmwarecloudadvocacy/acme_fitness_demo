@@ -12,10 +12,25 @@ class GuestUserBrowsing(TaskSequence):
     def on_start(self):
         self.getProducts()
 
+    def listCatalogItems(self):
+        items = self.client.get("/products").json()["data"]
+        for item in items:
+            products.append(item["id"])
+        return products
+
     @task(1)
     def getProducts(self):
         logging.info("Guest User - Get Products")
         self.client.get("/products")
+
+    @task(2)
+    def getProduct(self):
+        logging.info("Guest User - Get a product")
+        products = self.listCatalogItems()
+        id = random.choice(products)
+        product = self.client.get("/products/"+ id).json()
+        logging.info("Product info - " +  str(product))
+        products.clear()
 
 class AuthUserBrowsing(TaskSequence):
 
@@ -80,7 +95,7 @@ class AuthUserBrowsing(TaskSequence):
                 "delivery":"UPS/FEDEX",
                 "card":{
                     "type":"amex/visa/mastercard/bahubali",
-                    "number":"34983479798",
+                    "number":"349834797981", 
                     "expMonth":"12",
                     "expYear": "22",
                     "ccv":"123"
