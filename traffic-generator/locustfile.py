@@ -1,12 +1,18 @@
+# This program will generate traffic for ACME Fitness Shop App. It simulates both Authenticated and Guest user scenarios. You can run this program either from Command line or from
+# the web based UI. Refer to the "locust" documentation for further information. 
+
 from locust import HttpLocust, TaskSet, task, TaskSequence, seq_task, Locust
 import random
 
-users = ["eric", "phoebe", "dwight", "han"] ##User 'rob' does not exist. This to simulate a failure with incorrect user auth
+# List of users (pre-loaded into ACME Fitness shop)
+users = ["eric", "phoebe", "dwight", "han"] 
 
+# List of products within the catalog
 products = []
 
 import logging
 
+# GuestUserBrowsing simulates traffic for a Guest User (Not logged in)
 class GuestUserBrowsing(TaskSequence):
 
     def on_start(self):
@@ -32,6 +38,7 @@ class GuestUserBrowsing(TaskSequence):
         logging.info("Product info - " +  str(product))
         products.clear()
 
+# AuthUserBrowsing simulates traffic for Authenticated Users (Logged in)
 class AuthUserBrowsing(TaskSequence):
 
     def on_start(self):
