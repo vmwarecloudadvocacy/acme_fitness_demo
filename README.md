@@ -48,3 +48,6 @@ b. [kubernetes-manifest](kubernetes-manifests)
 
 
 ### Additional Info
+
+The [traffic-generator](traffic-generator) is based on **locust** and can be used to create various traffic patterns, if you need it for other demos associated with **Monitoring and Observability.** 
+
