@@ -41,7 +41,7 @@ spec:
       - name: acmefit-order-data
         emptyDir: {}
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-order:latest
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-order:1.0.0
         name: order
         env:
         - name: ORDER_DB_HOST

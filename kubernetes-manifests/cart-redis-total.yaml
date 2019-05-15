@@ -21,7 +21,7 @@ metadata:
   labels:
     app: acmefit
     service: cart-redis
-    version: v1.0
+    version: 1.0.0
 spec:
   selector:
     matchLabels:

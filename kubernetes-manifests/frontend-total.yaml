@@ -38,7 +38,7 @@ spec:
         service: frontend
     spec:
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end:1.0.0
         name: frontend
         env:
         - name: FRONTEND_PORT
