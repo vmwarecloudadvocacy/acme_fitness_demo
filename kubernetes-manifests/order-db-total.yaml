@@ -8,7 +8,7 @@ metadata:
 spec:
   ports:
     - port: 27017
-      name: order-mongo
+      name: mongo-order
       protocol: TCP
   clusterIP: None
   selector:

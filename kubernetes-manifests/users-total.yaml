@@ -7,14 +7,12 @@ metadata:
     service: users
 spec:
   ports:
-    - name: users
+    - name: tcp-users
       protocol: TCP
       port: 8081
-#      nodePort: 30435
   selector:
     app: acmefit
     service: users
-  type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment

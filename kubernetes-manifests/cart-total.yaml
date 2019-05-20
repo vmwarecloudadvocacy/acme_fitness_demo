@@ -7,14 +7,12 @@ metadata:
     service: cart
 spec:
   ports:
-    - name: cart
+    - name: tcp-cart
       protocol: TCP
       port: 5000
-#      nodePort: 30431
   selector:
     app: acmefit
     service: cart
-  type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment

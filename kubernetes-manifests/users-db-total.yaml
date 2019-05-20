@@ -8,7 +8,7 @@ metadata:
 spec:
   ports:
     - port: 27017
-      name: users-mongo
+      name: mongo-users
       protocol: TCP
   clusterIP: None
   selector:

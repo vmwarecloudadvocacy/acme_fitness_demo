@@ -7,14 +7,12 @@ metadata:
     service: order
 spec:
   ports:
-    - name: order
+    - name: tcp-order
       protocol: TCP
       port: 6000
-#      nodePort: 30433
   selector:
     app: acmefit
     service: order
-  type: NodePort
 ---
 apiVersion: apps/v1 # for versions before 1.8.0 use apps/v1beta1
 kind: Deployment

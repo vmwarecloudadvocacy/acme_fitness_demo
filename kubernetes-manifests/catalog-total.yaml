@@ -7,14 +7,12 @@ metadata:
     service: catalog
 spec:
   ports:
-    - name: catalog
+    - name: tcp-catalog
       protocol: TCP
       port: 8082
-#      nodePort: 30434
   selector:
     app: acmefit
     service: catalog
-  type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment
