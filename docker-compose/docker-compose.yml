@@ -38,7 +38,7 @@ services:
         - SETGID
         - SETUID
     front-end:
-       image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end:latest
+       image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end:1.1.0-beta
        hostname: front-end
        restart: always
        ports:
@@ -55,8 +55,12 @@ services:
            - CATALOG_PORT=8082
            - CART_PORT=5000
            - ORDER_PORT=6000
+           - TRACER_IP=jaeger
+           - TRACER_PORT=14268
+       depends_on:
+           - jaeger
     user:
-       image: gcr.io/vmwarecloudadvocacy/acmeshop-user:latest
+       image: gcr.io/vmwarecloudadvocacy/acmeshop-user:1.1.0-beta
        hostname: users
        restart: always
        cap_add:
@@ -67,8 +71,13 @@ services:
            - USERS_DB_HOST=user-db
            - USERS_DB_PORT=27017
            - USERS_PORT=8081
+           - TRACER_IP=192.168.152.218
+           - TRACER_PORT=14268
+       depends_on:
+           - user-db
+           - jaeger
     catalog:
-        image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog:latest
+        image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog:1.1.0-beta
         hostname: catalog
         restart: always
         cap_add:
@@ -79,8 +88,11 @@ services:
              - CATALOG_DB_HOST=catalog-db
              - CATALOG_PORT=8082
              - CATALOG_DB_PORT=27017
+             - TRACER_IP=jaeger
+             - TRACER_PORT=14268
         depends_on:
              - catalog-db
+             - jaeger
     redis-db:
       image: redis:5.0.3-alpine
       hostname: redis-db
@@ -88,19 +100,22 @@ services:
       ports:
         - '6379:6379'
     cart:
-      image: gcr.io/vmwarecloudadvocacy/acmeshop-cart
+      image: gcr.io/vmwarecloudadvocacy/acmeshop-cart:1.1.0-beta
       hostname: cart
       restart: always
       environment:
           - REDIS_HOST=redis-db
           - REDIS_PORT=6379
           - CART_PORT=5000
+          - JAEGER_HOST=jaeger
+          - JAEGER_PORT=6831
       ports:
           - '5000:5000'
       depends_on:
           - redis-db
+          - jaeger
     order:
-      image: gcr.io/vmwarecloudadvocacy/acmeshop-order:latest
+      image: gcr.io/vmwarecloudadvocacy/acmeshop-order:beta
       hostname: order
       restart: always
       ports:
@@ -114,13 +129,19 @@ services:
       depends_on:
           - payment
           - order-db
+          - jaeger
     payment:
       image: gcr.io/vmwarecloudadvocacy/acmeshop-payment:latest
       hostname: payment
       restart: always 
+    jaeger: 
+      image: jaegertracing/all-in-one:1.11
+      hostname: jaeger
+      restart: always
+      ports:
+        - '14268:14268'
+        - '16686:16686'
+        - '5778:5778'
+        - '6831-6832:6831-6832/udp'
+        - '5775:5775/udp'
 
-      
-      
-
-
-          
