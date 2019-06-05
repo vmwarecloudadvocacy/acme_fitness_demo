@@ -10,7 +10,6 @@ spec:
     - port: 27017
       name: mongo-users
       protocol: TCP
-  clusterIP: None
   selector:
     app: acmefit
     service: users-db

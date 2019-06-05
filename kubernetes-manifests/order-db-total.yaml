@@ -10,7 +10,6 @@ spec:
     - port: 27017
       name: mongo-order
       protocol: TCP
-  clusterIP: None
   selector:
     app: acmefit
     service: order-db

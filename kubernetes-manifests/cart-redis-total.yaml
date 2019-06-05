@@ -9,7 +9,6 @@ spec:
   ports:
     - port: 6379
       name: redis-cart
-  clusterIP: None
   selector:
     app: acmefit
     service: cart-redis

@@ -10,7 +10,6 @@ spec:
     - port: 27017
       name: mongo-catalog
       protocol: TCP
-  clusterIP: None
   selector:
     app: acmefit
     service: catalog-db
