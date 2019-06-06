@@ -7,7 +7,7 @@ metadata:
     service: cart
 spec:
   ports:
-    - name: tcp-cart
+    - name: http-cart
       protocol: TCP
       port: 5000
   selector:

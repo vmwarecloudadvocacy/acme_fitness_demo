@@ -7,7 +7,7 @@ metadata:
     service: payment
 spec:
   ports:
-    - name: tcp-payment
+    - name: http-payment
       protocol: TCP
       port: 9000
   selector:
