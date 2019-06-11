@@ -55,7 +55,7 @@ services:
            - CATALOG_PORT=8082
            - CART_PORT=5000
            - ORDER_PORT=6000
-           - TRACER_IP=jaeger
+           - TRACER_HOST=jaeger
            - TRACER_PORT=14268
        depends_on:
            - jaeger
@@ -71,7 +71,7 @@ services:
            - USERS_DB_HOST=user-db
            - USERS_DB_PORT=27017
            - USERS_PORT=8081
-           - TRACER_IP=192.168.152.218
+           - TRACER_HOST=jaeger
            - TRACER_PORT=14268
        depends_on:
            - user-db
@@ -88,7 +88,7 @@ services:
              - CATALOG_DB_HOST=catalog-db
              - CATALOG_PORT=8082
              - CATALOG_DB_PORT=27017
-             - TRACER_IP=jaeger
+             - TRACER_HOST=jaeger
              - TRACER_PORT=14268
         depends_on:
              - catalog-db
@@ -107,8 +107,8 @@ services:
           - REDIS_HOST=redis-db
           - REDIS_PORT=6379
           - CART_PORT=5000
-          - JAEGER_HOST=jaeger
-          - JAEGER_PORT=6831
+          - TRACER_HOST=jaeger
+          - TRACER_PORT=6831
       ports:
           - '5000:5000'
       depends_on:
