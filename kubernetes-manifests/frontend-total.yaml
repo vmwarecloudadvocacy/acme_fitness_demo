@@ -7,10 +7,9 @@ metadata:
     service: frontend
 spec:
   ports:
-    - name: frontend
+    - name: http-frontend
       protocol: TCP
       port: 3000
-#      nodePort: 30430
   selector:
     app: acmefit
     service: frontend
@@ -51,6 +50,8 @@ spec:
           value: 'order'
         - name: CART_HOST
           value: 'cart'
+        - name: TRACER_HOST
+          value: 'jaeger.observability'
         - name: USERS_PORT
           value: '8081'
         - name: CATALOG_PORT
@@ -59,6 +60,8 @@ spec:
           value: '5000'
         - name: ORDER_PORT
           value: '6000'
+        - name: TRACER_PORT
+          value: '14268'
         ports:
         - containerPort: 3000
           name: frontend

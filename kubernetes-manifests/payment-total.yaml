@@ -7,14 +7,12 @@ metadata:
     service: payment
 spec:
   ports:
-    - name: payment
+    - name: http-payment
       protocol: TCP
       port: 9000
-#      nodePort: 30432
   selector:
     app: acmefit
     service: payment
-  type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment
