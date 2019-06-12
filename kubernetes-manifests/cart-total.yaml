@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: cart
   labels:
-    app: acmefit
+    app: acmefit-cart-total
     service: cart
 spec:
   ports:
@@ -11,7 +11,7 @@ spec:
       protocol: TCP
       port: 5000
   selector:
-    app: acmefit
+    app: acmefit-cart-total
     service: cart
 ---
 apiVersion: apps/v1
@@ -19,12 +19,12 @@ kind: Deployment
 metadata:
   name: cart
   labels:
-    app: acmefit
+    app: acmefit-cart-total
     service: cart
 spec:
   selector:
     matchLabels:
-      app: acmefit
+      app: acmefit-cart-total
       service: cart
   strategy:
     type: Recreate
@@ -32,7 +32,7 @@ spec:
   template:
     metadata:
       labels:
-        app: acmefit
+        app: acmefit-cart-total
         service: cart
     spec:
       volumes:
@@ -55,7 +55,7 @@ spec:
           value: '5000'
         ports:
         - containerPort: 5000
-          name: cart
+          name: http-cart
         volumeMounts:
         - mountPath: "/data"
           name: "acmefit-cart-data"

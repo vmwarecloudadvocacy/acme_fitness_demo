@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: payment
   labels:
-    app: acmefit
+    app: acmefit-payment-total
     service: payment
 spec:
   ports:
@@ -11,7 +11,7 @@ spec:
       protocol: TCP
       port: 9000
   selector:
-    app: acmefit
+    app: acmefit-payment-total
     service: payment
 ---
 apiVersion: apps/v1
@@ -19,12 +19,12 @@ kind: Deployment
 metadata:
   name: payment
   labels:
-    app: acmefit
+    app: acmefit-payment-total
     service: payment
 spec:
   selector:
     matchLabels:
-      app: acmefit
+      app: acmefit-payment-total
       service: payment
   strategy:
     type: Recreate
@@ -32,7 +32,7 @@ spec:
   template:
     metadata:
       labels:
-        app: acmefit
+        app: acmefit-payment-total
         service: payment
     spec:
       containers:
@@ -43,4 +43,4 @@ spec:
           value: '9000'
         ports:
         - containerPort: 9000
-          name: payment
+          name: http-payment

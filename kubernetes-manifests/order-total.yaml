@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: order
   labels:
-    app: acmefit
+    app: acmefit-order-total
     service: order
 spec:
   ports:
@@ -11,7 +11,7 @@ spec:
       protocol: TCP
       port: 6000
   selector:
-    app: acmefit
+    app: acmefit-order-total
     service: order
 ---
 apiVersion: apps/v1 # for versions before 1.8.0 use apps/v1beta1
@@ -19,12 +19,12 @@ kind: Deployment
 metadata:
   name: order
   labels:
-    app: acmefit
+    app: acmefit-order-total
     service: order
 spec:
   selector:
     matchLabels:
-      app: acmefit
+      app: acmefit-order-total
       service: order
   strategy:
     type: Recreate
@@ -32,7 +32,7 @@ spec:
   template:
     metadata:
       labels:
-        app: acmefit
+        app: acmefit-order-total
         service: order
     spec:
       volumes:
@@ -61,7 +61,7 @@ spec:
           value: 'payment'
         ports:
         - containerPort: 6000
-          name: order
+          name: http-order
         volumeMounts:
         - mountPath: "/data"
           name: "acmefit-order-data"

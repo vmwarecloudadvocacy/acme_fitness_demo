@@ -3,14 +3,14 @@ kind: Service
 metadata:
   name: cart-redis
   labels:
-    app: acmefit
+    app: acmefit-cart-redis-total
     service: cart-redis
 spec:
   ports:
     - port: 6379
-      name: redis-cart
+      name: tcp-redis-cart
   selector:
-    app: acmefit
+    app: acmefit-cart-redis-total
     service: cart-redis
 ---
 apiVersion: apps/v1
@@ -18,19 +18,19 @@ kind: Deployment
 metadata:
   name: cart-redis
   labels:
-    app: acmefit
+    app: acmefit-cart-redis-total
     service: cart-redis
     version: 1.0.0
 spec:
   selector:
     matchLabels:
-      app: acmefit  # has to match .spec.template.metadata.labels
+      app: acmefit-cart-redis-total  # has to match .spec.template.metadata.labels
       service: cart-redis
   replicas: 1
   template:
     metadata:
       labels:
-        app: acmefit  # has to match .spec.selector.matchLabels
+        app: acmefit-cart-redis-total  # has to match .spec.selector.matchLabels
         service: cart-redis
     spec:
       containers:
@@ -44,7 +44,7 @@ spec:
               cpu: "100m"
               memory: "100Mi"
           ports:
-            - name: redis
+            - name: tcp-redis
               containerPort: 6379
               protocol: "TCP"
           env:

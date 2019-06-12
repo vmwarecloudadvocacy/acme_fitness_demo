@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: catalog
   labels:
-    app: acmefit
+    app: acmefit-catalog-total
     service: catalog
 spec:
   ports:
@@ -11,7 +11,7 @@ spec:
       protocol: TCP
       port: 8082
   selector:
-    app: acmefit
+    app: acmefit-catalog-total
     service: catalog
 ---
 apiVersion: apps/v1
@@ -19,12 +19,12 @@ kind: Deployment
 metadata:
   name: catalog
   labels:
-    app: acmefit
+    app: acmefit-catalog-total
     service: catalog
 spec:
   selector:
     matchLabels:
-      app: acmefit
+      app: acmefit-catalog-total
       service: catalog
   strategy:
     type: Recreate
@@ -32,7 +32,7 @@ spec:
   template:
     metadata:
       labels:
-        app: acmefit
+        app: acmefit-catalog-total
         service: catalog
     spec:
       volumes:
@@ -57,7 +57,7 @@ spec:
           value: '8082'
         ports:
         - containerPort: 8082
-          name: catalog
+          name: http-catalog
         volumeMounts:
         - mountPath: "/data"
           name: "acmefit-catalog-data"

@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: users
   labels:
-    app: acmefit
+    app: acmefit-users-total
     service: users
 spec:
   ports:
@@ -11,7 +11,7 @@ spec:
       protocol: TCP
       port: 8081
   selector:
-    app: acmefit
+    app: acmefit-users-total
     service: users
 ---
 apiVersion: apps/v1
@@ -19,12 +19,12 @@ kind: Deployment
 metadata:
   name: users
   labels:
-    app: acmefit
+    app: acmefit-users-total
     service: users
 spec:
   selector:
     matchLabels:
-      app: acmefit
+      app: acmefit-users-total
       service: users
   strategy:
     type: Recreate
@@ -32,7 +32,7 @@ spec:
   template:
     metadata:
       labels:
-        app: acmefit
+        app: acmefit-users-total
         service: users
     spec:
       volumes:
@@ -57,7 +57,7 @@ spec:
           value: '8081'
         ports:
         - containerPort: 8081
-          name: users
+          name: http-users
         volumeMounts:
         - mountPath: "/data"
           name: "acmefit-users-data"

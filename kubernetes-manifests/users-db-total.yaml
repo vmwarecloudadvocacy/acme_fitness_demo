@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: users-mongo
   labels:
-    app: acmefit
+    app: acmefit-users-db-total
     service: users-db
 spec:
   ports:
@@ -11,7 +11,7 @@ spec:
       name: mongo-users
       protocol: TCP
   selector:
-    app: acmefit
+    app: acmefit-users-db-total
     service: users-db
 ---
 apiVersion: apps/v1
@@ -19,18 +19,18 @@ kind: Deployment
 metadata:
   name: users-mongo
   labels:
-    app: acmefit
+    app: acmefit-users-db-total
     service: users-db
 spec:
   selector:
     matchLabels:
-      app: acmefit  # has to match .spec.template.metadata.labels
+      app: acmefit-users-db-total  # has to match .spec.template.metadata.labels
       service: users-db
   replicas: 1
   template:
     metadata:
       labels:
-        app: acmefit  # has to match .spec.selector.matchLabels
+        app: acmefit-users-db-total  # has to match .spec.selector.matchLabels
         service: users-db
     spec:
       containers:
@@ -39,7 +39,7 @@ spec:
           resources:
             {}
           ports:
-            - name: users-mongo
+            - name: mongo-users
               containerPort: 27017
               protocol: "TCP"
           env:
