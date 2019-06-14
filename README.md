@@ -13,6 +13,11 @@ Based on the type of deployment the requirements will vary
 
 Other deployment modes coming soon
 
+## Overview
+
+![Acmeshop Architecture](https://github.com/vmwarecloudadvocacy/acme_fitness_demo/blob/master/acmeshop.png)
+
+
 ## Instructions
 
 1. Clone this repository 
@@ -22,6 +27,7 @@ Other deployment modes coming soon
 ``` 
 .
 ├── README.md
+├── traffic-generator
 ├── docker-compose
 │   ├── README.md
 │   └── docker-compose.yml
