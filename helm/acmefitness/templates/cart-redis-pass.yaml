@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: redis-pass
+type: Opaque
+data:
+  {{- if .Values.passwords.cartRedis }}
+  password: {{ default "" .Values.passwords.cartRedis | b64enc | quote }}
+  {{- else }}
+  password: {{ randAlphaNum 10 | b64enc | quote }}
+  {{- end }}

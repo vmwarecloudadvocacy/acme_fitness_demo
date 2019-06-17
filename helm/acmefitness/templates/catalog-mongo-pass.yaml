@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: catalog-mongo-pass
+type: Opaque
+data:
+  {{- if .Values.passwords.catalogMongodb }}
+  password: {{ default "" .Values.passwords.catalogMongodb | b64enc | quote }}
+  {{- else }}
+  password: {{ randAlphaNum 10 | b64enc | quote }}
+  {{- end }}

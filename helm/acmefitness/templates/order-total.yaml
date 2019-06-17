@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: order
+  labels:
+    app: acmefit
+    service: order
+spec:
+  ports:
+    - name: http-order
+      protocol: TCP
+      port: 6000
+  selector:
+    app: acmefit
+    service: order
+---
+apiVersion: apps/v1 # for versions before 1.8.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  name: order
+  labels:
+    app: acmefit
+    service: order
+spec:
+  selector:
+    matchLabels:
+      app: acmefit
+      service: order
+  strategy:
+    type: Recreate
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: acmefit
+        service: order
+    spec:
+      volumes:
+      - name: acmefit-order-data
+        emptyDir: {}
+      containers:
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-order:1.0.1
+        name: order
+        env:
+        - name: ORDER_DB_HOST
+          value: 'order-mongo'
+        - name: ORDER_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: order-mongo-pass
+              key: password
+        - name: ORDER_DB_PORT
+          value: '27017'
+        - name: ORDER_DB_USERNAME
+          value: 'root'
+        - name: ORDER_PORT
+          value: '6000'
+        - name: PAYMENT_PORT
+          value: '9000'
+        - name: PAYMENT_HOST
+          value: 'payment'
+        ports:
+        - containerPort: 6000
+          name: order
+        volumeMounts:
+        - mountPath: "/data"
+          name: "acmefit-order-data"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"

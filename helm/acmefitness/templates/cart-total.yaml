@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cart
+  labels:
+    app: acmefit
+    service: cart
+spec:
+  ports:
+    - name: http-cart
+      protocol: TCP
+      port: 5000
+  selector:
+    app: acmefit
+    service: cart
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart
+  labels:
+    app: acmefit
+    service: cart
+spec:
+  selector:
+    matchLabels:
+      app: acmefit
+      service: cart
+  strategy:
+    type: Recreate
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: acmefit
+        service: cart
+    spec:
+      volumes:
+      - name: acmefit-cart-data
+        emptyDir: {}
+      containers:
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-cart:1.0.0
+        name: cart
+        env:
+        - name: REDIS_HOST
+          value: 'cart-redis'
+        - name: REDIS_PASS
+          valueFrom:
+            secretKeyRef:
+              name: redis-pass
+              key: password
+        - name: REDIS_PORT
+          value: '6379'
+        - name: CART_PORT
+          value: '5000'
+        ports:
+        - containerPort: 5000
+          name: cart
+        volumeMounts:
+        - mountPath: "/data"
+          name: "acmefit-cart-data"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"

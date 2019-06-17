@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-mongo
+  labels:
+    app: acmefit
+    service: order-db
+spec:
+  ports:
+    - port: 27017
+      name: mongo-order
+      protocol: TCP
+  selector:
+    app: acmefit
+    service: order-db
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-mongo
+  labels:
+    app: acmefit
+    service: order-db
+spec:
+  selector:
+    matchLabels:
+      app: acmefit  # has to match .spec.template.metadata.labels
+      service: order-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: acmefit  # has to match .spec.selector.matchLabels
+        service: order-db
+    spec:
+      containers:
+        - name: order-mongo
+          image: bitnami/mongodb:4.0.8
+          resources:
+            {}
+          ports:
+            - name: order-mongo
+              containerPort: 27017
+              protocol: "TCP"
+          env:
+          - name: MONGODB_USERNAME
+            value: 'root'
+          - name: MONGODB_DATABASE
+            value: 'acmefit'
+          - name: MONGODB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: order-mongo-pass
+                key: password
+          - name: MONGODB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: order-mongo-pass
+                key: password
+          volumeMounts:
+            - mountPath: /bitnami
+              name: mongodata
+      volumes:
+        - name: mongodata
+          emptyDir: {}
+#        - name: mongodata
+#          persistentVolumeClaim:
+#            claimName: mongodata

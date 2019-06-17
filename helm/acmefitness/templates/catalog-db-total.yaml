@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalog-mongo
+  labels:
+    app: acmefit
+    service: catalog-db
+spec:
+  ports:
+    - port: 27017
+      name: mongo-catalog
+      protocol: TCP
+  selector:
+    app: acmefit
+    service: catalog-db
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-mongo
+  labels:
+    app: acmefit
+    service: catalog-db
+spec:
+  selector:
+    matchLabels:
+      app: acmefit  # has to match .spec.template.metadata.labels
+      service: catalog-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: acmefit  # has to match .spec.selector.matchLabels
+        service: catalog-db
+    spec:
+      containers:
+        - name: catalog-mongo
+          image: bitnami/mongodb:4.0.8
+          resources:
+            {}
+          ports:
+            - name: catalog-mongo
+              containerPort: 27017
+              protocol: "TCP"
+          env:
+          - name: MONGODB_USERNAME
+            value: 'root'
+          - name: MONGODB_DATABASE
+            value: 'acmefit'
+          - name: MONGODB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: catalog-mongo-pass
+                key: password
+          - name: MONGODB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: catalog-mongo-pass
+                key: password
+          volumeMounts:
+            - mountPath: /bitnami
+              name: mongodata
+            - mountPath: /docker-entrypoint-initdb.d
+              name: mongo-initdb
+      volumes:
+        - name: mongodata
+          emptyDir: {}
+        - name: mongo-initdb
+          configMap:
+            name: catalog-initdb-config
+#        - name: mongodata
+#          persistentVolumeClaim:
+#            claimName: mongodata
