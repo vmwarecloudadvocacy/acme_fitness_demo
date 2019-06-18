@@ -8,8 +8,7 @@ metadata:
 spec:
   ports:
     - port: 6379
-      name: tcp-redis
-  clusterIP: None
+      name: redis-cart
   selector:
     app: acmefit
     service: cart-redis

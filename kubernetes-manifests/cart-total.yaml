@@ -7,14 +7,12 @@ metadata:
     service: cart
 spec:
   ports:
-    - name: cart
+    - name: http-cart
       protocol: TCP
       port: 5000
-#      nodePort: 30431
   selector:
     app: acmefit
     service: cart
-  type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -41,7 +39,7 @@ spec:
       - name: acmefit-cart-data
         emptyDir: {}
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-cart:1.0.0
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-cart:1.1.0-beta
         name: cart
         env:
         - name: REDIS_HOST
@@ -55,6 +53,10 @@ spec:
           value: '6379'
         - name: CART_PORT
           value: '5000'
+        - name: TRACER_HOST
+          value: 'jaeger.observability'
+        - name: TRACER_PORT
+          value: '6831'
         ports:
         - containerPort: 5000
           name: cart
