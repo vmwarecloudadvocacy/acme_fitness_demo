@@ -10,10 +10,11 @@ spec:
     - name: http-frontend
       protocol: TCP
       port: 3000
+#      nodePort: 30430
   selector:
     app: acmefit
     service: frontend
-  type: NodePort
+  type: LoadBalancer
 ---
 apiVersion: apps/v1 # for versions before 1.8.0 use apps/v1beta1
 kind: Deployment
@@ -37,7 +38,7 @@ spec:
         service: frontend
     spec:
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end:1.0.0
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end:1.1.1-beta
         name: frontend
         env:
         - name: FRONTEND_PORT
@@ -50,8 +51,6 @@ spec:
           value: 'order'
         - name: CART_HOST
           value: 'cart'
-        - name: TRACER_HOST
-          value: 'jaeger.observability'
         - name: USERS_PORT
           value: '8081'
         - name: CATALOG_PORT
@@ -60,8 +59,28 @@ spec:
           value: '5000'
         - name: ORDER_PORT
           value: '6000'
+        - name: TRACER_HOST
+          value: 'localhost'
         - name: TRACER_PORT
           value: '14268'
+        - name: JAEGER_AGENT_HOST
+          value: 'localhost'
+        - name: JAEGER_AGENT_PORT
+          value: '6831'
         ports:
         - containerPort: 3000
           name: frontend
+      - image: jaegertracing/jaeger-agent
+        name: jaeger-agent
+        ports:
+        - containerPort: 5775
+          protocol: UDP
+        - containerPort: 6831
+          protocol: UDP
+        - containerPort: 6832
+          protocol: UDP
+        - containerPort: 5778
+          protocol: UDP
+        - containerPort: 14268
+          protocol: TCP
+        args: ["--reporter.tchannel.host-port=wavefront-proxy.default.svc.cluster.local:12617"]

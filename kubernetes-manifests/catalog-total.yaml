@@ -39,7 +39,7 @@ spec:
       - name: acmefit-catalog-data
         emptyDir: {}
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog:1.1.0-beta
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog:1.1.1-beta
         name: catalog
         env:
         - name: CATALOG_DB_HOST
@@ -56,9 +56,13 @@ spec:
         - name: CATALOG_PORT
           value: '8082'
         - name: TRACER_HOST
-          value: 'jaeger.observability'
+          value: 'localhost'
         - name: TRACER_PORT
           value: '14268'
+        - name: JAEGER_AGENT_HOST
+          value: 'localhost'
+        - name: JAEGER_AGENT_PORT
+          value: '6831'
         ports:
         - containerPort: 8082
           name: catalog
@@ -72,3 +76,17 @@ spec:
           limits:
             memory: "256Mi"
             cpu: "500m"
+      - image: jaegertracing/jaeger-agent
+        name: jaeger-agent
+        ports:
+        - containerPort: 5775
+          protocol: UDP
+        - containerPort: 6831
+          protocol: UDP
+        - containerPort: 6832
+          protocol: UDP
+        - containerPort: 5778
+          protocol: UDP
+        - containerPort: 14268
+          protocol: TCP
+        args: ["--reporter.tchannel.host-port=wavefront-proxy.default.svc.cluster.local:12617"]
