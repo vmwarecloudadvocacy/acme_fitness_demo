@@ -2,9 +2,11 @@
 
 ### Requirements
 
-1. Locust - [Locust](https://docs.locust.io/en/stable/installation.html)
+1. Needs Python3.7 and above
 
-2. ACME Fitness App 
+2. Locust - [Locust](https://docs.locust.io/en/stable/installation.html)
+
+3. ACME Fitness App 
 
 ### Steps
 
