@@ -100,7 +100,7 @@ services:
       ports:
         - '6379:6379'
     cart:
-      image: gcr.io/vmwarecloudadvocacy/acmeshop-cart:1.1.0-beta
+      image: gcr.io/vmwarecloudadvocacy/acmeshop-cart:1.1.1-beta
       hostname: cart
       restart: always
       environment:
