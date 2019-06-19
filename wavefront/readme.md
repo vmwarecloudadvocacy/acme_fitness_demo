@@ -15,14 +15,14 @@ Download jaeger-wavefront.yaml to your system. Edit the file and set the followi
 **Wavefront**
 
 * WAVEFRONT_URL
- * value: **YOUR WAVEFRONT URL**
+  * value: **YOUR WAVEFRONT URL**
 * WAVEFRONT_TOKEN
- * value: **YOUR WAVEFRONT TOKEN**
+  * value: **YOUR WAVEFRONT TOKEN**
 
 **Wavefront Jaeger Integrations**
 
 * WAVEFRONT_PROXY_ARGS
- * value: --traceJaegerListenerPorts **YOUR JAEGER PORT**
+  * value: --traceJaegerListenerPorts **YOUR JAEGER PORT**
 
 **Container Port**
 
