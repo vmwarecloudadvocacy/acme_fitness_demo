@@ -5,7 +5,7 @@
 * [Kubernetes Setup](https://try.wavefront.com/integration/kubernetes/setup)
 * [Jaeger Integration Setup](https://try.wavefront.com/integration/jaeger/setup)
 
-**This has been tested with AKS**
+**This has been tested with AKS.**
 
 ## Wavefront Proxy Deployment
 
@@ -14,15 +14,22 @@ Download jaeger-wavefront.yaml to your system. Edit the file and set the followi
 
 **Wavefront**
 
-* WAVEFRONT_URL
-  * value: **YOUR WAVEFRONT URL**
-* WAVEFRONT_TOKEN
-  * value: **YOUR WAVEFRONT TOKEN**
+```
+env:
+- name: WAVEFRONT_URL
+    value: <YOUR WAVEFRONT URL>
+- name: WAVEFRONT_TOKEN
+    value: <YOUR WAVEFRONT TOKEN>
+```
 
 **Wavefront Jaeger Integrations**
 
-* WAVEFRONT_PROXY_ARGS
-  * value: --traceJaegerListenerPorts **YOUR JAEGER PORT**
+```
+env:
+# Jaeger Tracing Environment Variable
+- name: WAVEFRONT_PROXY_ARGS
+    value: --traceJaegerListenerPorts <YOUR JAEGER PORT>
+```
 
 **Container Port**
 
