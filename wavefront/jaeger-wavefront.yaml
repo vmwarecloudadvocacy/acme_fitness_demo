@@ -1,0 +1,63 @@
+# Need to change YOUR_CLUSTER and YOUR_API_TOKEN accordingly
+
+apiVersion: apps/v1
+# Kubernetes versions after 1.9.0 should use apps/v1
+# Kubernetes version 1.8.x should use apps/v1beta2
+# Kubernetes versions before 1.8.0 should use apps/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: wavefront-proxy
+    name: wavefront-proxy
+  name: wavefront-proxy
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wavefront-proxy
+  template:
+    metadata:
+      labels:
+        app: wavefront-proxy
+    spec:
+      containers:
+      - name: wavefront-proxy
+        image: wavefronthq/proxy:latest
+        imagePullPolicy: Always
+        env:
+        - name: WAVEFRONT_URL
+          value: <YOUR WAVEFRONT URL>
+        - name: WAVEFRONT_TOKEN
+          value: <YOUR WAVEFRONT TOKEN>
+        # Jaeger Tracing Environment Variable
+        - name: WAVEFRONT_PROXY_ARGS
+          value: --traceJaegerListenerPorts <YOUR JAEGER PORT> 
+        ports:
+        - containerPort: 2878
+          protocol: TCP
+        # Jaeger Tracing Port
+        - containerPort: <YOUR JAEGER PORT>
+          protocol: TCP
+        securityContext:
+          privileged: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wavefront-proxy
+  labels:
+    app: wavefront-proxy
+  namespace: default
+spec:
+  ports:
+  - name: wavefront
+    port: 2878
+    protocol: TCP
+  # Added for Jaeger Tracing
+  - name: jaeger
+    port: <YOUR JAEGER PORT>
+    targetPort: <YOUR JAEGER PORT>
+    protocol: TCP
+  selector:
+    app: wavefront-proxy

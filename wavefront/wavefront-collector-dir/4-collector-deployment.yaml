@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    k8s-app: wavefront-collector
+    name: wavefront-collector
+  name: wavefront-collector
+  namespace: wavefront-collector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: wavefront-collector
+  template:
+    metadata:
+      labels:
+        k8s-app: wavefront-collector
+    spec:
+      serviceAccountName: wavefront-collector
+      containers:
+      - name: wavefront-collector
+        image: wavefronthq/wavefront-kubernetes-collector:latest
+        imagePullPolicy: Always
+        command:
+        - /wavefront-collector
+        - --source=kubernetes.summary_api:''
+        - --sink=wavefront:?proxyAddress=wavefront-proxy.default.svc.cluster.local:2878&clusterName=<YOUR CLUSTER NAME>&includeLabels=true
+        - --v=2
+        volumeMounts:
+        - name: ssl-certs
+          mountPath: /etc/ssl/certs
+          readOnly: true
+      volumes:
+      - name: ssl-certs
+        hostPath:
+          path: /etc/ssl/certs
