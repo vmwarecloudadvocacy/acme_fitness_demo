@@ -4,14 +4,14 @@ kind: Service
 metadata:
   name: cart-redis
   labels:
-    app: acmefit-cart-redis-total
+    app: cart-redis-total
     service: cart-redis
 spec:
   ports:
     - port: 6379
       name: tcp-redis-cart
   selector:
-    app: acmefit-cart-redis-total
+    app: cart-redis-total
     service: cart-redis
 ---
 apiVersion: apps/v1
@@ -19,19 +19,19 @@ kind: Deployment
 metadata:
   name: cart-redis
   labels:
-    app: acmefit-cart-redis-total
+    app: cart-redis-total
     service: cart-redis
     version: 1.0.0
 spec:
   selector:
     matchLabels:
-      app: acmefit-cart-redis-total  # has to match .spec.template.metadata.labels
+      app: cart-redis-total  # has to match .spec.template.metadata.labels
       service: cart-redis
   replicas: 1
   template:
     metadata:
       labels:
-        app: acmefit-cart-redis-total  # has to match .spec.selector.matchLabels
+        app: cart-redis-total  # has to match .spec.selector.matchLabels
         service: cart-redis
     spec:
       containers:
@@ -76,7 +76,7 @@ kind: Service
 metadata:
   name: cart
   labels:
-    app: acmefit-cart-total
+    app: cart-total
     service: cart
 spec:
   ports:
@@ -84,7 +84,7 @@ spec:
       protocol: TCP
       port: 5000
   selector:
-    app: acmefit-cart-total
+    app: cart-total
     service: cart
 ---
 apiVersion: apps/v1
@@ -92,12 +92,12 @@ kind: Deployment
 metadata:
   name: cart
   labels:
-    app: acmefit-cart-total
+    app: cart-total
     service: cart
 spec:
   selector:
     matchLabels:
-      app: acmefit-cart-total
+      app: cart-total
       service: cart
   strategy:
     type: Recreate
@@ -105,11 +105,11 @@ spec:
   template:
     metadata:
       labels:
-        app: acmefit-cart-total
+        app: cart-total
         service: cart
     spec:
       volumes:
-      - name: acmefit-cart-data
+      - name: cart-data
         emptyDir: {}
       containers:
       - image: gcr.io/vmwarecloudadvocacy/acmeshop-cart:1.0.0
@@ -131,7 +131,7 @@ spec:
           name: http-cart
         volumeMounts:
         - mountPath: "/data"
-          name: "acmefit-cart-data"
+          name: "cart-data"
         resources:
           requests:
             memory: "64Mi"
@@ -161,7 +161,7 @@ kind: Service
 metadata:
   name: catalog-mongo
   labels:
-    app: acmefit-cart-db-total
+    app: catalog-db-total
     service: catalog-db
 spec:
   ports:
@@ -169,7 +169,7 @@ spec:
       name: mongo-catalog
       protocol: TCP
   selector:
-    app: acmefit-cart-db-total
+    app: catalog-db-total
     service: catalog-db
 ---
 apiVersion: apps/v1
@@ -177,18 +177,18 @@ kind: Deployment
 metadata:
   name: catalog-mongo
   labels:
-    app: acmefit-cart-db-total
+    app: catalog-db-total
     service: catalog-db
 spec:
   selector:
     matchLabels:
-      app: acmefit-cart-db-total  # has to match .spec.template.metadata.labels
+      app: catalog-db-total  # has to match .spec.template.metadata.labels
       service: catalog-db
   replicas: 1
   template:
     metadata:
       labels:
-        app: acmefit-cart-db-total  # has to match .spec.selector.matchLabels
+        app: catalog-db-total  # has to match .spec.selector.matchLabels
         service: catalog-db
     spec:
       containers:
@@ -230,7 +230,7 @@ kind: Service
 metadata:
   name: catalog
   labels:
-    app: acmefit-catalog-total
+    app: catalog-total
     service: catalog
 spec:
   ports:
@@ -238,7 +238,7 @@ spec:
       protocol: TCP
       port: 8082
   selector:
-    app: acmefit-catalog-total
+    app: catalog-total
     service: catalog
 ---
 apiVersion: apps/v1
@@ -246,13 +246,13 @@ kind: Deployment
 metadata:
   name: catalog
   labels:
-    app: acmefit-catalog-total
+    app: catalog-total
     service: catalog
     version: v1
 spec:
   selector:
     matchLabels:
-      app: acmefit-catalog-total
+      app: catalog-total
       service: catalog
       version: v1
   strategy:
@@ -261,12 +261,12 @@ spec:
   template:
     metadata:
       labels:
-        app: acmefit-catalog-total
+        app: catalog-total
         service: catalog
         version: v1
     spec:
       volumes:
-      - name: acmefit-catalog-data
+      - name: catalog-data
         emptyDir: {}
       containers:
       - image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog:1.0.0
@@ -290,7 +290,7 @@ spec:
           name: http-catalog
         volumeMounts:
         - mountPath: "/data"
-          name: "acmefit-catalog-data"
+          name: "catalog-data"
         resources:
           requests:
             memory: "64Mi"
@@ -304,7 +304,7 @@ kind: Service
 metadata:
   name: frontend
   labels:
-    app: acmefit-frontend-total
+    app: frontend-total
     service: frontend
 spec:
   ports:
@@ -312,7 +312,7 @@ spec:
       protocol: TCP
       port: 3000
   selector:
-    app: acmefit-frontend-total
+    app: frontend-total
     service: frontend
 ---
 apiVersion: apps/v1 # for versions before 1.8.0 use apps/v1beta1
@@ -320,12 +320,12 @@ kind: Deployment
 metadata:
   name: frontend
   labels:
-    app: acmefit-frontend-total
+    app: frontend-total
     service: frontend
 spec:
   selector:
     matchLabels:
-      app: acmefit-frontend-total
+      app: frontend-total
       service: frontend
   strategy:
     type: Recreate
@@ -333,7 +333,7 @@ spec:
   template:
     metadata:
       labels:
-        app: acmefit-frontend-total
+        app: frontend-total
         service: frontend
     spec:
       containers:
@@ -367,7 +367,7 @@ kind: Service
 metadata:
   name: order-mongo
   labels:
-    app: acmefit-order-db-total
+    app: order-db-total
     service: order-db
 spec:
   ports:
@@ -375,7 +375,7 @@ spec:
       name: mongo-order
       protocol: TCP
   selector:
-    app: acmefit-order-db-total
+    app: order-db-total
     service: order-db
 ---
 apiVersion: apps/v1
@@ -383,18 +383,18 @@ kind: Deployment
 metadata:
   name: order-mongo
   labels:
-    app: acmefit-order-db-total
+    app: order-db-total
     service: order-db
 spec:
   selector:
     matchLabels:
-      app: acmefit-order-db-total  # has to match .spec.template.metadata.labels
+      app: order-db-total  # has to match .spec.template.metadata.labels
       service: order-db
   replicas: 1
   template:
     metadata:
       labels:
-        app: acmefit-order-db-total  # has to match .spec.selector.matchLabels
+        app: order-db-total  # has to match .spec.selector.matchLabels
         service: order-db
     spec:
       containers:
@@ -429,7 +429,7 @@ kind: Service
 metadata:
   name: order
   labels:
-    app: acmefit-order-total
+    app: order-total
     service: order
 spec:
   ports:
@@ -437,7 +437,7 @@ spec:
       protocol: TCP
       port: 6000
   selector:
-    app: acmefit-order-total
+    app: order-total
     service: order
 ---
 apiVersion: apps/v1 # for versions before 1.8.0 use apps/v1beta1
@@ -445,12 +445,12 @@ kind: Deployment
 metadata:
   name: order
   labels:
-    app: acmefit-order-total
+    app: order-total
     service: order
 spec:
   selector:
     matchLabels:
-      app: acmefit-order-total
+      app: order-total
       service: order
   strategy:
     type: Recreate
@@ -458,11 +458,11 @@ spec:
   template:
     metadata:
       labels:
-        app: acmefit-order-total
+        app: order-total
         service: order
     spec:
       volumes:
-      - name: acmefit-order-data
+      - name: order-data
         emptyDir: {}
       containers:
       - image: gcr.io/vmwarecloudadvocacy/acmeshop-order:1.0.1
@@ -490,7 +490,7 @@ spec:
           name: http-order
         volumeMounts:
         - mountPath: "/data"
-          name: "acmefit-order-data"
+          name: "order-data"
         resources:
           requests:
             memory: "64Mi"
@@ -504,7 +504,7 @@ kind: Service
 metadata:
   name: payment
   labels:
-    app: acmefit-payment-total
+    app: payment-total
     service: payment
 spec:
   ports:
@@ -512,7 +512,7 @@ spec:
       protocol: TCP
       port: 9000
   selector:
-    app: acmefit-payment-total
+    app: payment-total
     service: payment
 ---
 apiVersion: apps/v1
@@ -520,12 +520,12 @@ kind: Deployment
 metadata:
   name: payment
   labels:
-    app: acmefit-payment-total
+    app: payment-total
     service: payment
 spec:
   selector:
     matchLabels:
-      app: acmefit-payment-total
+      app: payment-total
       service: payment
   strategy:
     type: Recreate
@@ -533,7 +533,7 @@ spec:
   template:
     metadata:
       labels:
-        app: acmefit-payment-total
+        app: payment-total
         service: payment
     spec:
       containers:
@@ -566,7 +566,7 @@ kind: Service
 metadata:
   name: users-mongo
   labels:
-    app: acmefit-users-db-total
+    app: users-db-total
     service: users-db
 spec:
   ports:
@@ -574,7 +574,7 @@ spec:
       name: mongo-users
       protocol: TCP
   selector:
-    app: acmefit-users-db-total
+    app: users-db-total
     service: users-db
 ---
 apiVersion: apps/v1
@@ -582,18 +582,18 @@ kind: Deployment
 metadata:
   name: users-mongo
   labels:
-    app: acmefit-users-db-total
+    app: users-db-total
     service: users-db
 spec:
   selector:
     matchLabels:
-      app: acmefit-users-db-total  # has to match .spec.template.metadata.labels
+      app: users-db-total  # has to match .spec.template.metadata.labels
       service: users-db
   replicas: 1
   template:
     metadata:
       labels:
-        app: acmefit-users-db-total  # has to match .spec.selector.matchLabels
+        app: users-db-total  # has to match .spec.selector.matchLabels
         service: users-db
     spec:
       containers:
@@ -635,7 +635,7 @@ kind: Service
 metadata:
   name: users
   labels:
-    app: acmefit-users-total
+    app: users-total
     service: users
 spec:
   ports:
@@ -643,7 +643,7 @@ spec:
       protocol: TCP
       port: 8081
   selector:
-    app: acmefit-users-total
+    app: users-total
     service: users
 ---
 apiVersion: apps/v1
@@ -651,12 +651,12 @@ kind: Deployment
 metadata:
   name: users
   labels:
-    app: acmefit-users-total
+    app: users-total
     service: users
 spec:
   selector:
     matchLabels:
-      app: acmefit-users-total
+      app: users-total
       service: users
   strategy:
     type: Recreate
@@ -664,11 +664,11 @@ spec:
   template:
     metadata:
       labels:
-        app: acmefit-users-total
+        app: users-total
         service: users
     spec:
       volumes:
-      - name: acmefit-users-data
+      - name: users-data
         emptyDir: {}
       containers:
       - image: gcr.io/vmwarecloudadvocacy/acmeshop-user:1.0.0
@@ -692,7 +692,7 @@ spec:
           name: http-users
         volumeMounts:
         - mountPath: "/data"
-          name: "acmefit-users-data"
+          name: "users-data"
         resources:
           requests:
             memory: "64Mi"
