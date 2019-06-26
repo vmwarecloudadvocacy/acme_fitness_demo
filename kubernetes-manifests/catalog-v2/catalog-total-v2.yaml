@@ -1,0 +1,58 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-v2
+  labels:
+    app: acmefit-catalog-total
+    service: catalog
+    version: v2
+spec:
+  selector:
+    matchLabels:
+      app: acmefit-catalog-total
+      service: catalog
+      version: v2
+  strategy:
+    type: Recreate
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: acmefit-catalog-total
+        service: catalog
+        version: v2
+    spec:
+      volumes:
+      - name: acmefit-catalog-data
+        emptyDir: {}
+      containers:
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog:1.0.0
+        name: catalog
+        env:
+        - name: CATALOG_DB_HOST
+          value: 'catalog-mongo-v2'
+        - name: CATALOG_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: catalog-mongo-pass
+              key: password
+        - name: CATALOG_DB_PORT
+          value: '27017'
+        - name: CATALOG_DB_USERNAME
+          value: 'mongoadmin'
+        - name: CATALOG_PORT
+          value: '8082'
+        ports:
+        - containerPort: 8082
+          name: http-catalog
+        volumeMounts:
+        - mountPath: "/data"
+          name: "acmefit-catalog-data"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"

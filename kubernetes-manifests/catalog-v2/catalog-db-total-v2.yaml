@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalog-mongo-v2
+  labels:
+    app: acmefit-cart-db-total
+    service: catalog-db-v2
+spec:
+  ports:
+    - port: 27017
+      name: mongo-catalog
+      protocol: TCP
+  selector:
+    app: acmefit-cart-db-total
+    service: catalog-db-v2
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-mongo-v2
+  labels:
+    app: acmefit-cart-db-total
+    service: catalog-db-v2
+spec:
+  selector:
+    matchLabels:
+      app: acmefit-cart-db-total  # has to match .spec.template.metadata.labels
+      service: catalog-db-v2
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: acmefit-cart-db-total  # has to match .spec.selector.matchLabels
+        service: catalog-db-v2
+    spec:
+      containers:
+        - name: catalog-mongo
+          image: mongo:4
+          resources:
+            {}
+          ports:
+            - name: mongo-catalog
+              containerPort: 27017
+              protocol: "TCP"
+          env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            value: 'mongoadmin'
+          - name: MONGO_INITDB_DATABASE
+            value: 'acmefit'
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: catalog-mongo-pass
+                key: password
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongodata
+            - mountPath: /docker-entrypoint-initdb.d
+              name: mongo-initdb
+      volumes:
+        - name: mongodata
+          emptyDir: {}
+        - name: mongo-initdb
+          configMap:
+            name: catalog-initdb-config-v2
+#        - name: mongodata
+#          persistentVolumeClaim:
+#            claimName: mongodata
