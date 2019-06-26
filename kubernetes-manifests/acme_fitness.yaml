@@ -248,11 +248,13 @@ metadata:
   labels:
     app: acmefit-catalog-total
     service: catalog
+    version: v1
 spec:
   selector:
     matchLabels:
       app: acmefit-catalog-total
       service: catalog
+      version: v1
   strategy:
     type: Recreate
   replicas: 1
@@ -261,6 +263,7 @@ spec:
       labels:
         app: acmefit-catalog-total
         service: catalog
+        version: v1
     spec:
       volumes:
       - name: acmefit-catalog-data
