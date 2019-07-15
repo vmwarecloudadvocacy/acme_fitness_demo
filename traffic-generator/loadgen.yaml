@@ -13,7 +13,6 @@ spec:
       port: 8089
   selector:
     app: loadgenerator
-    service: loadgenerator
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -46,6 +45,8 @@ spec:
       - name: main
         image: docker.io/vmwareallspark/acme-load-gen:latest
         imagePullPolicy: Always
+        ports:
+        - containerPort: 8089
         env:
         - name: FRONTEND_ADDR
           value: "frontend:3000"
