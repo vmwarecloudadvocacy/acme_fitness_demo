@@ -46,13 +46,11 @@ spec:
               containerPort: 6379
               protocol: "TCP"
           env:
-            - name: ALLOW_EMPTY_PASSWORD
-              value: "yes"
-            # - name: REDIS_PASSWORD
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: redis-pass
-            #       key: password
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-pass
+                  key: password
           volumeMounts:
             - mountPath: /bitnami
               name: redis-data
