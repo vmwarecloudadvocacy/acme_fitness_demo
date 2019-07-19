@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
         - name: users-mongo
-          image: mongo:4
+          image: bitnami/mongodb:4.0.8
           resources:
             {}
           ports:
@@ -43,17 +43,22 @@ spec:
               containerPort: 27017
               protocol: "TCP"
           env:
-          - name: MONGO_INITDB_ROOT_USERNAME
-            value: 'mongoadmin'
-          - name: MONGO_INITDB_DATABASE
+          - name: MONGODB_USERNAME
+            value: 'root'
+          - name: MONGODB_DATABASE
             value: 'acmefit'
-          - name: MONGO_INITDB_ROOT_PASSWORD
+          - name: MONGODB_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: users-mongo-pass
+                name: catalog-mongo-pass
+                key: password
+          - name: MONGODB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: catalog-mongo-pass
                 key: password
           volumeMounts:
-            - mountPath: /data/db
+            - mountPath: /bitnami
               name: mongodata
             - mountPath: /docker-entrypoint-initdb.d
               name: mongo-initdb

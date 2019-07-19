@@ -52,7 +52,7 @@ spec:
         - name: ORDER_DB_PORT
           value: '27017'
         - name: ORDER_DB_USERNAME
-          value: 'mongoadmin'
+          value: 'root'
         - name: ORDER_PORT
           value: '6000'
         - name: PAYMENT_PORT

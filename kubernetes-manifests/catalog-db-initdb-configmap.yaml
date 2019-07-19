@@ -4,6 +4,7 @@ metadata:
   name: catalog-initdb-config
 data:
   seed.js: |
+    db = db.getSiblingDB('acmefit');
     db.catalog.insertMany([
       {"name":"Yoga Mat","shortdescription":"Magic Yoga Mat!","description":"Our Yoga Mat is magic. You will twist into a human pretzel with the greatest of ease. Never done Yoga before? This mat will turn you into an instant professional with barely any work. It’s the American way!. Namaste!","imageurl1":"/static/images/yogamat_square.jpg","imageurl2":"/static/images/yogamat_thumb2.jpg","imageurl3":"/static/images/yogamat_thumb3.jpg","price":62.5,"tags":["mat"]}
       ,{"name":"Water Bottle","shortdescription":"The last Water Bottle you'll ever buy!","description":"Our Water Bottle only has to be filled once! That's right. ONCE. Unlimited water, for the rest of your life. Doesn't that $34.99 seem a lot more reasonable now? Stop buying all those other water bottles that you have to keep refilling like a sucker. Get the ACME bottle today!","imageurl1":"/static/images/bottle_square.jpg","imageurl2":"/static/images/bottle_thumb2.jpg","imageurl3":"/static/images/bottle_thumb3.jpg","price":34.9900016784668,"tags":["bottle"]}

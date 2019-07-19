@@ -4,6 +4,7 @@ metadata:
   name: users-initdb-config
 data:
   seed.js: |
+    db = db.getSiblingDB('acmefit');
     db.users.insertMany([
     {"firstname":"Walter","lastname":"White","email":"walter@acmefitness.com","username":"walter","password":"6837ea9b06409112a824d113927ad74fabc5c76e","salt":""}
     ,{"firstname":"Dwight","lastname":"Schrute","email":"dwight@acmefitness.com","username":"dwight","password":"6837ea9b06409112a824d113927ad74fabc5c76e","salt":""}

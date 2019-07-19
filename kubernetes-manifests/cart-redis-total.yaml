@@ -35,9 +35,7 @@ spec:
     spec:
       containers:
         - name: cart-redis
-          image: redis:5.0.3-alpine
-          command:
-            - "redis-server"
+          image: bitnami/redis:5.0
           imagePullPolicy: Always
           resources:
             requests:
@@ -48,15 +46,13 @@ spec:
               containerPort: 6379
               protocol: "TCP"
           env:
-          - name: REDIS-HOST
-            value: 'cart-redis'
-          - name: REDIS_PASS
-            valueFrom:
-              secretKeyRef:
-                name: redis-pass
-                key: password
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-pass
+                  key: password
           volumeMounts:
-            - mountPath: /var/lib/redis
+            - mountPath: /bitnami
               name: redis-data
 #            - mountPath: /etc/redis
 #              name: redis-config

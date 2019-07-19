@@ -52,7 +52,7 @@ spec:
         - name: CATALOG_DB_PORT
           value: '27017'
         - name: CATALOG_DB_USERNAME
-          value: 'mongoadmin'
+          value: 'root'
         - name: CATALOG_PORT
           value: '8082'
         ports:

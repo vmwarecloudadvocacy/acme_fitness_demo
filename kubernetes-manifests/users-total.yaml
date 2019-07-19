@@ -52,7 +52,7 @@ spec:
         - name: USERS_DB_PORT
           value: '27017'
         - name: USERS_DB_USERNAME
-          value: 'mongoadmin'
+          value: 'root'
         - name: USERS_PORT
           value: '8081'
         ports:
