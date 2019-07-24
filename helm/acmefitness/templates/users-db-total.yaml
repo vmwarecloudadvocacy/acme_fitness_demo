@@ -47,6 +47,8 @@ spec:
             value: 'root'
           - name: MONGODB_DATABASE
             value: 'acmefit'
+          - name: MONGODB_ENABLE_IPV6
+            value: 'no'
           - name: MONGODB_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:

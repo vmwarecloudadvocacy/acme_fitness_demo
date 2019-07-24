@@ -36,7 +36,7 @@ spec:
         service: payment
     spec:
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-payment:1.0.0
+      - image: {{ printf "%s/%s%s:%s" .Values.image.registry .Values.image.repositoryPrefix "payment" .Values.image.tag }}
         name: payment
         env:
         - name: PAYMENT_PORT

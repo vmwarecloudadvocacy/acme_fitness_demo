@@ -38,7 +38,7 @@ spec:
         service: frontend
     spec:
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end:1.0.0
+      - image: {{ printf "%s/%s%s:%s" .Values.image.registry .Values.image.repositoryPrefix "front-end" .Values.image.tag }}
         name: frontend
         ports:
           - name: http

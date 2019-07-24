@@ -39,7 +39,7 @@ spec:
       - name: acmefit-catalog-data
         emptyDir: {}
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog:1.0.0
+      - image: {{ printf "%s/%s%s:%s" .Values.image.registry .Values.image.repositoryPrefix "catalogsvc" .Values.image.tag }}
         name: catalog
         env:
         - name: CATALOG_DB_HOST
