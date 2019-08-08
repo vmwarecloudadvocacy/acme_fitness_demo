@@ -9,7 +9,8 @@ spec:
   ports:
     - name: http-frontend
       protocol: TCP
-      port: 3000
+      port: 80
+      targetPort: 3000
 #      nodePort: 30430
   selector:
     app: acmefit
@@ -38,7 +39,7 @@ spec:
         service: frontend
     spec:
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end:1.0.0
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end:1.2.0
         name: frontend
         env:
         - name: FRONTEND_PORT
