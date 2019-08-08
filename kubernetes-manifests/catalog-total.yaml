@@ -55,6 +55,8 @@ spec:
           value: 'mongoadmin'
         - name: CATALOG_PORT
           value: '8082'
+        - name: CATALOG_VERSION
+          value: 'v1'
         ports:
         - containerPort: 8082
           name: catalog

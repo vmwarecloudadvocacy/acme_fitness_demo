@@ -79,6 +79,7 @@ services:
              - CATALOG_DB_HOST=catalog-db
              - CATALOG_PORT=8082
              - CATALOG_DB_PORT=27017
+             - CATALOG_VERSION=v1
         depends_on:
              - catalog-db
     redis-db:
