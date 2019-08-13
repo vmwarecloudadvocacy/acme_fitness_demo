@@ -4,14 +4,14 @@ kind: Service
 metadata:
   name: cart-redis
   labels:
-    app: cart-redis-total
+    app: cart-redis
     service: cart-redis
 spec:
   ports:
     - port: 6379
       name: tcp-redis-cart
   selector:
-    app: cart-redis-total
+    app: cart-redis
     service: cart-redis
 ---
 apiVersion: apps/v1
@@ -19,19 +19,19 @@ kind: Deployment
 metadata:
   name: cart-redis
   labels:
-    app: cart-redis-total
+    app: cart-redis
     service: cart-redis
     version: 1.0.0
 spec:
   selector:
     matchLabels:
-      app: cart-redis-total  # has to match .spec.template.metadata.labels
+      app: cart-redis  # has to match .spec.template.metadata.labels
       service: cart-redis
   replicas: 1
   template:
     metadata:
       labels:
-        app: cart-redis-total  # has to match .spec.selector.matchLabels
+        app: cart-redis  # has to match .spec.selector.matchLabels
         service: cart-redis
     spec:
       containers:
@@ -161,35 +161,35 @@ kind: Service
 metadata:
   name: catalog-mongo
   labels:
-    app: catalog-db-total
-    service: catalog-db
+    app: catalog-mongo
+    service: catalog-mongo
 spec:
   ports:
     - port: 27017
       name: mongo-catalog
       protocol: TCP
   selector:
-    app: catalog-db-total
-    service: catalog-db
+    app: catalog-mongo
+    service: catalog-mongo
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: catalog-mongo
   labels:
-    app: catalog-db-total
-    service: catalog-db
+    app: catalog-mongo
+    service: catalog-mongo
 spec:
   selector:
     matchLabels:
-      app: catalog-db-total  # has to match .spec.template.metadata.labels
-      service: catalog-db
+      app: catalog-mongo  # has to match .spec.template.metadata.labels
+      service: catalog-mongo
   replicas: 1
   template:
     metadata:
       labels:
-        app: catalog-db-total  # has to match .spec.selector.matchLabels
-        service: catalog-db
+        app: catalog-mongo  # has to match .spec.selector.matchLabels
+        service: catalog-mongo
     spec:
       containers:
         - name: catalog-mongo
@@ -230,7 +230,7 @@ kind: Service
 metadata:
   name: catalog
   labels:
-    app: catalog-total
+    app: catalog
     service: catalog
 spec:
   ports:
@@ -238,7 +238,7 @@ spec:
       protocol: TCP
       port: 8082
   selector:
-    app: catalog-total
+    app: catalog
     service: catalog
 ---
 apiVersion: apps/v1
@@ -252,7 +252,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: catalog-total
+      app: catalog
       service: catalog
       version: v1
   strategy:
@@ -261,7 +261,7 @@ spec:
   template:
     metadata:
       labels:
-        app: catalog-total
+        app: catalog
         service: catalog
         version: v1
     spec:
@@ -304,7 +304,7 @@ kind: Service
 metadata:
   name: frontend
   labels:
-    app: frontend-total
+    app: frontend
     service: frontend
 spec:
   ports:
@@ -312,7 +312,7 @@ spec:
       protocol: TCP
       port: 3000
   selector:
-    app: frontend-total
+    app: frontend
     service: frontend
 ---
 apiVersion: apps/v1 # for versions before 1.8.0 use apps/v1beta1
@@ -320,12 +320,12 @@ kind: Deployment
 metadata:
   name: frontend
   labels:
-    app: frontend-total
+    app: frontend
     service: frontend
 spec:
   selector:
     matchLabels:
-      app: frontend-total
+      app: frontend
       service: frontend
   strategy:
     type: Recreate
@@ -367,35 +367,35 @@ kind: Service
 metadata:
   name: order-mongo
   labels:
-    app: order-db-total
-    service: order-db
+    app: order-mongo
+    service: order-mongo
 spec:
   ports:
     - port: 27017
       name: mongo-order
       protocol: TCP
   selector:
-    app: order-db-total
-    service: order-db
+    app: order-mongo
+    service: order-mongo
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: order-mongo
   labels:
-    app: order-db-total
-    service: order-db
+    app: order-mongo
+    service: order-mongo
 spec:
   selector:
     matchLabels:
-      app: order-db-total  # has to match .spec.template.metadata.labels
-      service: order-db
+      app: order-mongo  # has to match .spec.template.metadata.labels
+      service: order-mongo
   replicas: 1
   template:
     metadata:
       labels:
-        app: order-db-total  # has to match .spec.selector.matchLabels
-        service: order-db
+        app: order-mongo  # has to match .spec.selector.matchLabels
+        service: order-mongo
     spec:
       containers:
         - name: order-mongo
@@ -429,7 +429,7 @@ kind: Service
 metadata:
   name: order
   labels:
-    app: order-total
+    app: order
     service: order
 spec:
   ports:
@@ -437,7 +437,7 @@ spec:
       protocol: TCP
       port: 6000
   selector:
-    app: order-total
+    app: order
     service: order
 ---
 apiVersion: apps/v1 # for versions before 1.8.0 use apps/v1beta1
@@ -445,12 +445,12 @@ kind: Deployment
 metadata:
   name: order
   labels:
-    app: order-total
+    app: order
     service: order
 spec:
   selector:
     matchLabels:
-      app: order-total
+      app: order
       service: order
   strategy:
     type: Recreate
@@ -458,7 +458,7 @@ spec:
   template:
     metadata:
       labels:
-        app: order-total
+        app: order
         service: order
     spec:
       volumes:
@@ -504,7 +504,7 @@ kind: Service
 metadata:
   name: payment
   labels:
-    app: payment-total
+    app: payment
     service: payment
 spec:
   ports:
@@ -512,7 +512,7 @@ spec:
       protocol: TCP
       port: 9000
   selector:
-    app: payment-total
+    app: payment
     service: payment
 ---
 apiVersion: apps/v1
@@ -520,12 +520,12 @@ kind: Deployment
 metadata:
   name: payment
   labels:
-    app: payment-total
+    app: payment
     service: payment
 spec:
   selector:
     matchLabels:
-      app: payment-total
+      app: payment
       service: payment
   strategy:
     type: Recreate
@@ -533,7 +533,7 @@ spec:
   template:
     metadata:
       labels:
-        app: payment-total
+        app: payment
         service: payment
     spec:
       containers:
@@ -566,35 +566,35 @@ kind: Service
 metadata:
   name: users-mongo
   labels:
-    app: users-db-total
-    service: users-db
+    app: users-mongo
+    service: users-mongo
 spec:
   ports:
     - port: 27017
       name: mongo-users
       protocol: TCP
   selector:
-    app: users-db-total
-    service: users-db
+    app: users-mongo
+    service: users-mongo
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: users-mongo
   labels:
-    app: users-db-total
+    app: users-mongo
     service: users-db
 spec:
   selector:
     matchLabels:
-      app: users-db-total  # has to match .spec.template.metadata.labels
-      service: users-db
+      app: users-mongo  # has to match .spec.template.metadata.labels
+      service: users-mongo
   replicas: 1
   template:
     metadata:
       labels:
-        app: users-db-total  # has to match .spec.selector.matchLabels
-        service: users-db
+        app: users-mongo  # has to match .spec.selector.matchLabels
+        service: users-mongo
     spec:
       containers:
         - name: users-mongo
