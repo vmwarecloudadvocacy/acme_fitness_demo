@@ -43,16 +43,17 @@ spec:
         name: order
         env:
         - name: ORDER_DB_HOST
-          value: 'order-mongo'
+          value: 'billpostgress.postgres.database.azure.com'
         - name: ORDER_DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: order-mongo-pass
-              key: password
+          value: 'Password1'
         - name: ORDER_DB_PORT
-          value: '27017'
+          value: '5327'
         - name: ORDER_DB_USERNAME
-          value: 'mongoadmin'
+          value: 'postgres'
+        - name: PGPASSWORD
+          value: 'Password1'
+        - name: ORDER_AUTH_DB
+          value: 'Password1'
         - name: ORDER_PORT
           value: '6000'
         - name: PAYMENT_PORT
