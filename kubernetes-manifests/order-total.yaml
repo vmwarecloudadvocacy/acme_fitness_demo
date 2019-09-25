@@ -55,14 +55,20 @@ spec:
         - name: ORDER_DB_PORT
           value: '5432'
         - name: ORDER_DB_USERNAME
-          value: 'postgres@billpostgress'
+          valueFrom:
+            secretKeyRef:
+              name: order-postgres-user
+              key: username
         - name: PGPASSWORD
           valueFrom:
             secretKeyRef:
               name: order-postgres-pass
               key: password
         - name: ORDER_AUTH_DB
-          value: 'postgres'
+          valueFrom:
+            secretKeyRef:
+              name: order-postgres-db
+              key: dbname
         - name: ORDER_PORT
           value: '6000'
         - name: PAYMENT_PORT
