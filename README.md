@@ -15,12 +15,11 @@ Other deployment modes coming soon
 
 ## Overview
 
-![Acmeshop Architecture](https://github.com/vmwarecloudadvocacy/acme_fitness_demo/blob/master/acmeshop.png)
-
+![Acmeshop Architecture](./acmeshop.png)
 
 ## Instructions
 
-1. Clone this repository 
+1. Clone this repository
 
 2. You will notice the following directory structure
 
@@ -57,9 +56,9 @@ Other deployment modes coming soon
 
 3. Switch to the appropriate directory for deployment
 
-a. [docker-compose](./docker-compose)  
-b. [kubernetes-manifest](./kubernetes-manifests)
-c. [aws-fargate](./aws-fargate)
+* [docker-compose](./docker-compose)  
+* [kubernetes-manifest](./kubernetes-manifests)
+* [aws-fargate](./aws-fargate)
 
 ### Additional Info
 
