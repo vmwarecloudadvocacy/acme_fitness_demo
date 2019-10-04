@@ -1,0 +1,1021 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AWS CloudFormation Template for the ACME Fitness Shop: This template deploys the 
+  CloudJourney.io ACME Fitness Shop using AWS Fargate. 
+  
+  **WARNING** You will be billed for the AWS resources used if you create a stack from this 
+  template.'
+
+# The below parameters allow you to control some of the input values of the template each time you 
+# create or update the stack.
+# The ACME Fitness Shop is a collection of AWS resources that work together. All resources are 
+# tagged with five tags to make it easier to identify them later. It is mandatory to provide values
+# for the UserTag (your username) and TeamTag (the team you work on). The parameters "VersionTag" 
+# and "FeatureTag" shouldn't be changed.
+Parameters:
+  TemplateVersionTag:
+    Type: String
+    Default: v0.1.0
+    Description: "The version of the CloudFormation Template (shouldn't be changed)."
+  UserTag:
+    Type: String
+    Description: "The name of the user deploying the ACME Fitness Shop."
+  TeamTag:
+    Type: String
+    Description: "The team the user deploying the ACME Fitness Shop works on."
+  FeatureTag:
+    Type: String
+    Description: "The name of the project that is deployed, ACME Fitness Shop (shouldn't be changed)."
+    Default: acme-fitness-shop
+  SourceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
+    Description: 'A security group controls the inbound traffic that is allowed to reach the instances 
+                  that are associated with the security group. The security group you specify here will 
+                  have access to all AWS Fargate instances that are created.'
+  Subnets:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: 'You can launch AWS resources into a specified subnet. The subnet you specify here 
+                  should be allowed to auto-assign public IPv4 address.'
+  VPC:
+    Type: AWS::EC2::VPC::Id
+    Description: 'A VPC is logically isolated from other virtual networks in the AWS Cloud. This 
+                  CloudFormation template will launch AWS Fargate instances into the VPC you specify here.'
+
+# The resources section declares the AWS resources that are created by the CloudFormation template
+Resources:
+  # The AWS::Logs::LogGroup resource specifies a log group. A log group defines common properties for
+  # log streams, such as their retention and access control rules. Each log stream must belong to one 
+  # log group. All AWS resources will log to the same group, making troubleshooting easier.
+  ACMELogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: 
+      LogGroupName: !Sub ${FeatureTag}
+  
+  # The AWS::ECS::Cluster resource creates an Amazon Elastic Container Service (Amazon ECS) cluster.
+  # This cluster will have all AWS Fargate instances.
+  Cluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Ref AWS::StackName
+      Tags: 
+        - Key: version
+          Value: !Ref TemplateVersionTag
+        - Key: author
+          Value: !Ref UserTag
+        - Key: team
+          Value: !Ref TeamTag
+        - Key: feature
+          Value: !Ref FeatureTag
+        - Key: region
+          Value: !Ref AWS::Region
+
+  # Creates a private namespace based on DNS, which will be visible only inside a specified Amazon VPC.
+  # The namespace defines our service naming scheme. In this particular case, all services will be part
+  # of the fitness.acme domain
+  ServiceDiscovery:
+    Type: AWS::ServiceDiscovery::PrivateDnsNamespace
+    Properties:
+      Name: fitness.acme
+      Vpc: !Ref VPC
+  
+  # Services in the ServiceDiscovery are complex types that contains information about a service. The 
+  # name of the service is used together with the ServiceDiscovery namespace, to form the complete
+  # domain name. As an example, a service with the name 'mongo' will have the full domain name
+  # mongo.fitness.acme.
+
+  # user-db
+  UserDbServiceDiscovery:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: user-db
+      DnsConfig:
+        DnsRecords:
+          - Type: A
+            TTL: "10"
+        NamespaceId: !Ref ServiceDiscovery
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+
+  # order-db
+  OrderDbServiceDiscovery:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: order-db
+      DnsConfig:
+        DnsRecords:
+          - Type: A
+            TTL: "10"
+        NamespaceId: !Ref ServiceDiscovery
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+
+  # catalog-db
+  CatalogDbServiceDiscovery:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: catalog-db
+      DnsConfig:
+        DnsRecords:
+          - Type: A
+            TTL: "10"
+        NamespaceId: !Ref ServiceDiscovery
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+
+  # front-end
+  FrontEndServiceDiscovery:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: front-end
+      DnsConfig:
+        DnsRecords:
+          - Type: A
+            TTL: "10"
+        NamespaceId: !Ref ServiceDiscovery
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+
+  # user
+  UserServiceDiscovery:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: user
+      DnsConfig:
+        DnsRecords:
+          - Type: A
+            TTL: "10"
+        NamespaceId: !Ref ServiceDiscovery
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+
+  # catalog
+  CatalogServiceDiscovery:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: catalog
+      DnsConfig:
+        DnsRecords:
+          - Type: A
+            TTL: "10"
+        NamespaceId: !Ref ServiceDiscovery
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+
+  # redis-db
+  RedisDbServiceDiscovery:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: redis-db
+      DnsConfig:
+        DnsRecords:
+          - Type: A
+            TTL: "10"
+        NamespaceId: !Ref ServiceDiscovery
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+
+  # cart
+  CartServiceDiscovery:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: cart
+      DnsConfig:
+        DnsRecords:
+          - Type: A
+            TTL: "10"
+        NamespaceId: !Ref ServiceDiscovery
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+
+  # order
+  OrderServiceDiscovery:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: order
+      DnsConfig:
+        DnsRecords:
+          - Type: A
+            TTL: "10"
+        NamespaceId: !Ref ServiceDiscovery
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+
+  # payment
+  PaymentServiceDiscovery:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Name: payment
+      DnsConfig:
+        DnsRecords:
+          - Type: A
+            TTL: "10"
+        NamespaceId: !Ref ServiceDiscovery
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+
+  # The AWS::IAM::Role creates a new role for your AWS account. This role will be able to run
+  # all containers and have access to the default policy called AmazonECSTaskExecutionRolePolicy
+  TaskExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub 'AmazonECS${AWS::StackName}ExecutionRole'
+      Description: !Sub 'Allow ${AWS::StackName} to manage Amazon ECS on your behalf'
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action: "sts:AssumeRole"
+            Effect: Allow
+            Principal: 
+              Service: ecs-tasks.amazonaws.com
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+      Tags: 
+        - Key: version
+          Value: !Ref TemplateVersionTag
+        - Key: author
+          Value: !Ref UserTag
+        - Key: team
+          Value: !Ref TeamTag
+        - Key: feature
+          Value: !Ref FeatureTag
+        - Key: region
+          Value: !Ref AWS::Region
+
+  # The AWS::ECS::TaskDefinition resource describes the container and volume definitions of an 
+  # Amazon Elastic Container Service (Amazon ECS) task. It specifies which Docker images to use, 
+  # the required resources, and other configurations related to launching the task definition 
+  # through an Amazon ECS service. Each service will have it's own task definition
+  
+  # user-db
+  UserDbTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties: 
+      ContainerDefinitions:
+        - Name: user-db
+          Environment: 
+            - Name: MONGO_INITDB_ROOT_USERNAME
+              Value: mongoadmin
+            - Name: MONGO_INITDB_ROOT_PASSWORD
+              Value: secret
+            - Name: MONGO_INITDB_DATABASE
+              Value: acmefit
+          Essential: true
+          #Image: gcr.io/vmwarecloudadvocacy/acmeshop-user-db:latest
+          Image: mongo:4
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: !Ref AWS::Region
+              awslogs-group: !Ref ACMELogGroup
+              awslogs-stream-prefix: user-db
+      Cpu: "256"
+      Family: !Sub ${AWS::StackName}-user-db
+      Memory: "512"
+      NetworkMode: awsvpc
+      RequiresCompatibilities: 
+        - FARGATE
+      ExecutionRoleArn: !GetAtt TaskExecutionRole.Arn
+      Tags: 
+        - Key: version
+          Value: !Ref TemplateVersionTag
+        - Key: author
+          Value: !Ref UserTag
+        - Key: team
+          Value: !Ref TeamTag
+        - Key: feature
+          Value: !Ref FeatureTag
+        - Key: region
+          Value: !Ref AWS::Region
+
+  # order-db
+  OrderDbTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties: 
+      ContainerDefinitions:
+        - Name: order-db
+          Environment: 
+            - Name: MONGO_INITDB_ROOT_USERNAME
+              Value: mongoadmin
+            - Name: MONGO_INITDB_ROOT_PASSWORD
+              Value: secret
+          Essential: true
+          Image: mongo:4
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: !Ref AWS::Region
+              awslogs-group: !Ref ACMELogGroup
+              awslogs-stream-prefix: order-db
+      Cpu: "256"
+      Family: !Sub ${AWS::StackName}-order-db
+      Memory: "512"
+      NetworkMode: awsvpc
+      RequiresCompatibilities: 
+        - FARGATE
+      ExecutionRoleArn: !GetAtt TaskExecutionRole.Arn
+      Tags: 
+        - Key: version
+          Value: !Ref TemplateVersionTag
+        - Key: author
+          Value: !Ref UserTag
+        - Key: team
+          Value: !Ref TeamTag
+        - Key: feature
+          Value: !Ref FeatureTag
+        - Key: region
+          Value: !Ref AWS::Region
+
+  # catalog-db
+  CatalogDbTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties: 
+      ContainerDefinitions:
+        - Name: catalog-db
+          Environment: 
+            - Name: MONGO_INITDB_ROOT_USERNAME
+              Value: mongoadmin
+            - Name: MONGO_INITDB_ROOT_PASSWORD
+              Value: secret
+            - Name: MONGO_INITDB_DATABASE
+              Value: acmefit
+          Essential: true
+          #Image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog-db:latest
+          Image: mongo:4
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: !Ref AWS::Region
+              awslogs-group: !Ref ACMELogGroup
+              awslogs-stream-prefix: catalog-db
+      Cpu: "256"
+      Family: !Sub ${AWS::StackName}-catalog-db
+      Memory: "512"
+      NetworkMode: awsvpc
+      RequiresCompatibilities: 
+        - FARGATE
+      ExecutionRoleArn: !GetAtt TaskExecutionRole.Arn
+      Tags: 
+        - Key: version
+          Value: !Ref TemplateVersionTag
+        - Key: author
+          Value: !Ref UserTag
+        - Key: team
+          Value: !Ref TeamTag
+        - Key: feature
+          Value: !Ref FeatureTag
+        - Key: region
+          Value: !Ref AWS::Region
+
+  # front-end
+  FrontEndTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties: 
+      ContainerDefinitions:
+        - Name: front-end
+          Environment: 
+            - Name: PORT
+              Value: 3000
+            - Name: USERS_HOST
+              Value: user.fitness.acme
+            - Name: CATALOG_HOST
+              Value: catalog.fitness.acme
+            - Name: CART_HOST
+              Value: cart.fitness.acme
+            - Name: ORDER_HOST
+              Value: order.fitness.acme
+            - Name: USERS_PORT
+              Value: 8081
+            - Name: CATALOG_PORT
+              Value: 8082
+            - Name: CART_PORT
+              Value: 5000
+            - Name: ORDER_PORT
+              Value: 6000
+          Essential: true
+          Image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end:latest
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: !Ref AWS::Region
+              awslogs-group: !Ref ACMELogGroup
+              awslogs-stream-prefix: front-end
+      Cpu: "256"
+      Family: !Sub ${AWS::StackName}-front-end
+      Memory: "512"
+      NetworkMode: awsvpc
+      RequiresCompatibilities: 
+        - FARGATE
+      ExecutionRoleArn: !GetAtt TaskExecutionRole.Arn
+      Tags: 
+        - Key: version
+          Value: !Ref TemplateVersionTag
+        - Key: author
+          Value: !Ref UserTag
+        - Key: team
+          Value: !Ref TeamTag
+        - Key: feature
+          Value: !Ref FeatureTag
+        - Key: region
+          Value: !Ref AWS::Region
+
+  # user
+  UserTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties: 
+      ContainerDefinitions:
+        - Name: user
+          Environment: 
+            - Name: USERS_DB_USERNAME
+              Value: mongoadmin
+            - Name: USERS_DB_PASSWORD
+              Value: secret
+            - Name: USERS_DB_HOST
+              Value: user-db.fitness.acme
+            - Name: USERS_DB_PORT
+              Value: 27017
+            - Name: USERS_PORT
+              Value: 8081
+          Essential: true
+          Image: gcr.io/vmwarecloudadvocacy/acmeshop-user:latest
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: !Ref AWS::Region
+              awslogs-group: !Ref ACMELogGroup
+              awslogs-stream-prefix: user
+      Cpu: "256"
+      Family: !Sub ${AWS::StackName}-user
+      Memory: "512"
+      NetworkMode: awsvpc
+      RequiresCompatibilities: 
+        - FARGATE
+      ExecutionRoleArn: !GetAtt TaskExecutionRole.Arn
+      Tags: 
+        - Key: version
+          Value: !Ref TemplateVersionTag
+        - Key: author
+          Value: !Ref UserTag
+        - Key: team
+          Value: !Ref TeamTag
+        - Key: feature
+          Value: !Ref FeatureTag
+        - Key: region
+          Value: !Ref AWS::Region
+
+  # catalog
+  CatalogTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties: 
+      ContainerDefinitions:
+        - Name: catalog
+          Environment: 
+            - Name: CATALOG_DB_USERNAME
+              Value: mongoadmin
+            - Name: CATALOG_DB_PASSWORD
+              Value: secret
+            - Name: CATALOG_DB_HOST
+              Value: catalog-db.fitness.acme
+            - Name: CATALOG_DB_PORT
+              Value: 27017
+            - Name: CATALOG_PORT
+              Value: 8082
+          Essential: true
+          Image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog:latest
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: !Ref AWS::Region
+              awslogs-group: !Ref ACMELogGroup
+              awslogs-stream-prefix: catalog
+      Cpu: "256"
+      Family: !Sub ${AWS::StackName}-catalog
+      Memory: "512"
+      NetworkMode: awsvpc
+      RequiresCompatibilities: 
+        - FARGATE
+      ExecutionRoleArn: !GetAtt TaskExecutionRole.Arn
+      Tags: 
+        - Key: version
+          Value: !Ref TemplateVersionTag
+        - Key: author
+          Value: !Ref UserTag
+        - Key: team
+          Value: !Ref TeamTag
+        - Key: feature
+          Value: !Ref FeatureTag
+        - Key: region
+          Value: !Ref AWS::Region
+
+  # redis-db
+  RedisDbTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties: 
+      ContainerDefinitions:
+        - Name: redis-db
+          Essential: true
+          Image: redis:5.0.3-alpine
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: !Ref AWS::Region
+              awslogs-group: !Ref ACMELogGroup
+              awslogs-stream-prefix: redis-db
+      Cpu: "256"
+      Family: !Sub ${AWS::StackName}-redis-db
+      Memory: "512"
+      NetworkMode: awsvpc
+      RequiresCompatibilities: 
+        - FARGATE
+      ExecutionRoleArn: !GetAtt TaskExecutionRole.Arn
+      Tags: 
+        - Key: version
+          Value: !Ref TemplateVersionTag
+        - Key: author
+          Value: !Ref UserTag
+        - Key: team
+          Value: !Ref TeamTag
+        - Key: feature
+          Value: !Ref FeatureTag
+        - Key: region
+          Value: !Ref AWS::Region
+
+  # cart
+  CartTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties: 
+      ContainerDefinitions:
+        - Name: cart
+          Environment: 
+            - Name: REDIS_HOST
+              Value: redis-db.fitness.acme
+            - Name: REDIS_PORT
+              Value: 6379
+            - Name: CART_PORT
+              Value: 5000
+          Essential: true
+          Image: gcr.io/vmwarecloudadvocacy/acmeshop-cart
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: !Ref AWS::Region
+              awslogs-group: !Ref ACMELogGroup
+              awslogs-stream-prefix: cart
+      Cpu: "256"
+      Family: !Sub ${AWS::StackName}-cart
+      Memory: "512"
+      NetworkMode: awsvpc
+      RequiresCompatibilities: 
+        - FARGATE
+      ExecutionRoleArn: !GetAtt TaskExecutionRole.Arn
+      Tags: 
+        - Key: version
+          Value: !Ref TemplateVersionTag
+        - Key: author
+          Value: !Ref UserTag
+        - Key: team
+          Value: !Ref TeamTag
+        - Key: feature
+          Value: !Ref FeatureTag
+        - Key: region
+          Value: !Ref AWS::Region
+
+  # order
+  OrderTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties: 
+      ContainerDefinitions:
+        - Name: order
+          Environment: 
+            - Name: PAYMENT_HOST
+              Value: payment.fitness.acme
+            - Name: ORDER_PORT
+              Value: 6000
+            - Name: ORDER_DB_HOST
+              Value: order-db.fitness.acme
+            - Name: ORDER_DB_PASSWORD
+              Value: secret
+            - Name: ORDER_DB_USERNAME
+              Value: mongoadmin
+          Essential: true
+          Image: gcr.io/vmwarecloudadvocacy/acmeshop-order:latest
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: !Ref AWS::Region
+              awslogs-group: !Ref ACMELogGroup
+              awslogs-stream-prefix: order
+      Cpu: "256"
+      Family: !Sub ${AWS::StackName}-order
+      Memory: "512"
+      NetworkMode: awsvpc
+      RequiresCompatibilities: 
+        - FARGATE
+      ExecutionRoleArn: !GetAtt TaskExecutionRole.Arn
+      Tags: 
+        - Key: version
+          Value: !Ref TemplateVersionTag
+        - Key: author
+          Value: !Ref UserTag
+        - Key: team
+          Value: !Ref TeamTag
+        - Key: feature
+          Value: !Ref FeatureTag
+        - Key: region
+          Value: !Ref AWS::Region
+
+  # payment
+  PaymentTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties: 
+      ContainerDefinitions:
+        - Name: payment
+          Essential: true
+          Image: gcr.io/vmwarecloudadvocacy/acmeshop-payment:latest
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: !Ref AWS::Region
+              awslogs-group: !Ref ACMELogGroup
+              awslogs-stream-prefix: payment
+      Cpu: "256"
+      Family: !Sub ${AWS::StackName}-payment
+      Memory: "512"
+      NetworkMode: awsvpc
+      RequiresCompatibilities: 
+        - FARGATE
+      ExecutionRoleArn: !GetAtt TaskExecutionRole.Arn
+      Tags: 
+        - Key: version
+          Value: !Ref TemplateVersionTag
+        - Key: author
+          Value: !Ref UserTag
+        - Key: team
+          Value: !Ref TeamTag
+        - Key: feature
+          Value: !Ref FeatureTag
+        - Key: region
+          Value: !Ref AWS::Region
+
+  # A security group controls the inbound traffic that is allowed to reach the instances 
+  # that are associated with the security group. Each service will have their own security
+  # group. The SourceSecurityGroup will have access to each group, along with any dependent
+  # services.
+
+  # user-db
+  UserDbServiceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub 'Security group for user-db in ${AWS::StackName}'
+      SecurityGroupIngress:
+        - ToPort: 27017
+          FromPort: 27017
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref SourceSecurityGroup
+        - ToPort: 27017
+          FromPort: 27017
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref UserServiceSecurityGroup
+      VpcId: !Ref VPC
+
+  # order-db
+  OrderDbServiceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub 'Security group for order-db in ${AWS::StackName}'
+      SecurityGroupIngress:
+        - ToPort: 27017
+          FromPort: 27017
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref SourceSecurityGroup
+        - ToPort: 27017
+          FromPort: 27017
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref OrderServiceSecurityGroup
+      VpcId: !Ref VPC
+
+  # catalog-db
+  CatalogDbServiceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub 'Security group for catalog-db in ${AWS::StackName}'
+      SecurityGroupIngress:
+        - ToPort: 27017
+          FromPort: 27017
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref SourceSecurityGroup
+        - ToPort: 27017
+          FromPort: 27017
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref CatalogServiceSecurityGroup
+      VpcId: !Ref VPC
+
+  # front-end
+  FrontEndServiceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub 'Security group for front-end in ${AWS::StackName}'
+      SecurityGroupIngress:
+        - ToPort: 3000
+          FromPort: 3000
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref SourceSecurityGroup
+      VpcId: !Ref VPC
+
+  # user
+  UserServiceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub 'Security group for user in ${AWS::StackName}'
+      SecurityGroupIngress:
+        - ToPort: 8081
+          FromPort: 8081
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref FrontEndServiceSecurityGroup
+        - ToPort: 8081
+          FromPort: 8081
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref SourceSecurityGroup
+      VpcId: !Ref VPC
+
+  # catalog
+  CatalogServiceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub 'Security group for catalog in ${AWS::StackName}'
+      SecurityGroupIngress:
+        - ToPort: 8082
+          FromPort: 8082
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref FrontEndServiceSecurityGroup
+        - ToPort: 8082
+          FromPort: 8082
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref SourceSecurityGroup
+      VpcId: !Ref VPC
+
+  # redis-db
+  RedisDbServiceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub 'Security group for redis-db in ${AWS::StackName}'
+      SecurityGroupIngress:
+        - ToPort: 6379
+          FromPort: 6379
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref CartServiceSecurityGroup
+        - ToPort: 6379
+          FromPort: 6379
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref SourceSecurityGroup
+      VpcId: !Ref VPC
+
+  # cart
+  CartServiceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub 'Security group for cart in ${AWS::StackName}'
+      SecurityGroupIngress:
+        - ToPort: 5000
+          FromPort: 5000
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref FrontEndServiceSecurityGroup
+        - ToPort: 5000
+          FromPort: 5000
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref SourceSecurityGroup
+      VpcId: !Ref VPC
+
+  # order
+  OrderServiceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub 'Security group for Order in ${AWS::StackName}'
+      SecurityGroupIngress:
+        - ToPort: 6000
+          FromPort: 6000
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref FrontEndServiceSecurityGroup
+        - ToPort: 6000
+          FromPort: 6000
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref SourceSecurityGroup
+      VpcId: !Ref VPC
+
+  # payment
+  PaymentServiceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub 'Security group for payment in ${AWS::StackName}'
+      SecurityGroupIngress:
+        - ToPort: 9000
+          FromPort: 9000
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref OrderServiceSecurityGroup
+        - ToPort: 9000
+          FromPort: 9000
+          IpProtocol: tcp
+          SourceSecurityGroupId: !Ref SourceSecurityGroup
+      VpcId: !Ref VPC
+
+  # The AWS::ECS::Service resource creates an Amazon Elastic Container Service (Amazon ECS) service
+  # that runs and maintains the requested number of tasks and associated load balancers. Each service
+  # will be started with one instance and the appropriate security groups
+
+  # payment
+  # From an EC2 instance on the same subnet you can test this service using
+  # curl -s http://payment.fitness.acme:9000/live
+  PaymentService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref Cluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      ServiceName: !Sub '${AWS::StackName}-payment-svc'
+      ServiceRegistries:
+        - RegistryArn: !GetAtt PaymentServiceDiscovery.Arn
+      TaskDefinition: !Ref PaymentTaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets: !Ref Subnets
+          SecurityGroups:
+            - !GetAtt PaymentServiceSecurityGroup.GroupId
+
+  # order-db
+  # From an EC2 instance on the same subnet you can test this service using
+  # nc -vz order-db.fitness.acme 27017
+  OrderDbService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref Cluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      ServiceName: !Sub '${AWS::StackName}-order-db-svc'
+      ServiceRegistries:
+        - RegistryArn: !GetAtt OrderDbServiceDiscovery.Arn
+      TaskDefinition: !Ref OrderDbTaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets: !Ref Subnets
+          SecurityGroups:
+            - !GetAtt OrderDbServiceSecurityGroup.GroupId
+
+  # catalog-db
+  # From an EC2 instance on the same subnet you can test this service using
+  # nc -vz catalog-db.fitness.acme 27017
+  CatalogDbService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref Cluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      ServiceName: !Sub '${AWS::StackName}-catalog-db-svc'
+      ServiceRegistries:
+        - RegistryArn: !GetAtt CatalogDbServiceDiscovery.Arn
+      TaskDefinition: !Ref CatalogDbTaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets: !Ref Subnets
+          SecurityGroups:
+            - !GetAtt CatalogDbServiceSecurityGroup.GroupId
+
+  # user-db
+  # From an EC2 instance on the same subnet you can test this service using
+  # nc -vz user-db.fitness.acme 27017
+  UserDbService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref Cluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      ServiceName: !Sub '${AWS::StackName}-user-db-svc'
+      ServiceRegistries:
+        - RegistryArn: !GetAtt UserDbServiceDiscovery.Arn
+      TaskDefinition: !Ref UserDbTaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets: !Ref Subnets
+          SecurityGroups:
+            - !GetAtt UserDbServiceSecurityGroup.GroupId
+
+  # redis-db
+  # From an EC2 instance on the same subnet you can test this service using
+  # nc -vz redis-db.fitness.acme 6379
+  RedisDbService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref Cluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      ServiceName: !Sub '${AWS::StackName}-redis-db-svc'
+      ServiceRegistries:
+        - RegistryArn: !GetAtt RedisDbServiceDiscovery.Arn
+      TaskDefinition: !Ref RedisDbTaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets: !Ref Subnets
+          SecurityGroups:
+            - !GetAtt RedisDbServiceSecurityGroup.GroupId
+
+  # order
+  # From an EC2 instance on the same subnet you can test this service using
+  # curl -s http://order.fitness.acme:6000/order/8888
+  OrderService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref Cluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      ServiceName: !Sub '${AWS::StackName}-order-svc'
+      ServiceRegistries:
+        - RegistryArn: !GetAtt OrderServiceDiscovery.Arn
+      TaskDefinition: !Ref OrderTaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets: !Ref Subnets
+          SecurityGroups:
+            - !GetAtt OrderServiceSecurityGroup.GroupId
+
+  # cart
+  # From an EC2 instance on the same subnet you can test this service using
+  # curl -s http://cart.fitness.acme:5000/cart/all
+  CartService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref Cluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      ServiceName: !Sub '${AWS::StackName}-cart-svc'
+      ServiceRegistries:
+        - RegistryArn: !GetAtt CartServiceDiscovery.Arn
+      TaskDefinition: !Ref CartTaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets: !Ref Subnets
+          SecurityGroups:
+            - !GetAtt CartServiceSecurityGroup.GroupId
+
+  # catalog
+  # From an EC2 instance on the same subnet you can test this service using
+  # curl -s http://catalog.fitness.acme:8082/products
+  CatalogService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref Cluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      ServiceName: !Sub '${AWS::StackName}-catalog-svc'
+      ServiceRegistries:
+        - RegistryArn: !GetAtt CatalogServiceDiscovery.Arn
+      TaskDefinition: !Ref CatalogTaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets: !Ref Subnets
+          SecurityGroups:
+            - !GetAtt CatalogServiceSecurityGroup.GroupId
+
+  # user
+  # From an EC2 instance on the same subnet you can test this service using
+  # curl -s http://user.fitness.acme:8081/users
+  UserService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref Cluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      ServiceName: !Sub '${AWS::StackName}-user-svc'
+      ServiceRegistries:
+        - RegistryArn: !GetAtt UserServiceDiscovery.Arn
+      TaskDefinition: !Ref UserTaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets: !Ref Subnets
+          SecurityGroups:
+            - !GetAtt UserServiceSecurityGroup.GroupId
+
+  # front-end
+  # From an EC2 instance on the same subnet you can test this service using
+  # curl -s http://front-end.fitness.acme:300
+  FrontEndService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref Cluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      ServiceName: !Sub '${AWS::StackName}-front-end-svc'
+      ServiceRegistries:
+        - RegistryArn: !GetAtt FrontEndServiceDiscovery.Arn
+      TaskDefinition: !Ref FrontEndTaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets: !Ref Subnets
+          SecurityGroups:
+            - !GetAtt FrontEndServiceSecurityGroup.GroupId
