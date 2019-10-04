@@ -10,6 +10,7 @@ Based on the type of deployment the requirements will vary
 
 1. **docker-compose** - Needs docker-compose version 1.23.1+
 2. **kubernetes**
+3. **AWS Fargate** 
 
 Other deployment modes coming soon
 
