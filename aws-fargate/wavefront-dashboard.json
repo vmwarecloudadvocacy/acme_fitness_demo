@@ -1,0 +1,310 @@
+{
+  "name": "ACME Fitness Shop - Fargate",
+  "url": "ACME-Fitness-Shop--Fargate",
+  "eventFilterType": "BYCHART",
+  "displayDescription": false,
+  "displaySectionTableOfContents": true,
+  "displayQueryParameters": true,
+  "sections": [
+    {
+      "rows": [
+        {
+          "charts": [
+            {
+              "chartSettings": {
+                "type": "markdown-widget",
+                "plainMarkdownContent": "|  |  |\n| --- | --- |\n| ![aws ecs fargate](https://retgits-img.s3-us-west-2.amazonaws.com/fargate-logo.png) | This dashboard provides real-time visibility into the **ACME Fitness Shop** running on **Amazon Elastic Container Service (ECS)** using the **Fargate** launch type. AWS Fargate is a compute engine for Amazon ECS that allows you to run containers without having to manage servers or clusters. The metrics in this dashboard come from [CloudWatch](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/cloudwatch-metrics.html \"_blank\") and doesn't provide metrics on individual containers. If you need detailed container metrics, check out the [Wavefront docs](https://docs.wavefront.com/integrations_aws_ecs.html \"_blank\").|",
+                "autoColumnTags": false,
+                "sparklineDisplayColor": null,
+                "sparklineLineColor": null,
+                "sparklineFillColor": null
+              },
+              "includeObsoleteMetrics": false,
+              "interpolatePoints": false,
+              "name": "",
+              "units": "Units",
+              "base": 0,
+              "chartAttributes": {
+                "dashboardLayout": {
+                  "x": 0,
+                  "y": 0,
+                  "h": 6,
+                  "w": 6
+                }
+              },
+              "sources": [
+                {
+                  "name": "A",
+                  "query": "",
+                  "secondaryAxis": false,
+                  "scatterPlotSource": "Y",
+                  "querybuilderSerialization": "{\"_v\":1,\"metric\":\"\",\"filters\":[[],\"and\"],\"functions\":[]}",
+                  "querybuilderEnabled": true,
+                  "sourceDescription": ""
+                }
+              ],
+              "noDefaultEvents": false
+            },
+            {
+              "chartSettings": {
+                "type": "markdown-widget",
+                "plainMarkdownContent": "The CloudFormation template to deploy the ACME Fitness Shop on AWS Fargate is available on [GitHub](https://github.com/vmwarecloudadvocacy/acme_fitness_demo/tree/master/aws-fargate). The CloudFormation stack will create:\n\n* Log groups\n* ECS Clusters\n* Cloud Maps\n* Execution Roles\n* ECS Task Definitions\n* ECS Services\n* EC2 Security Groups",
+                "autoColumnTags": false,
+                "sparklineDisplayColor": null,
+                "sparklineLineColor": null,
+                "sparklineFillColor": null
+              },
+              "includeObsoleteMetrics": false,
+              "interpolatePoints": false,
+              "name": "Deployment",
+              "units": "Units",
+              "base": 0,
+              "chartAttributes": {
+                "dashboardLayout": {
+                  "x": 6,
+                  "y": 0,
+                  "h": 6,
+                  "w": 6
+                }
+              },
+              "sources": [
+                {
+                  "name": "A",
+                  "query": "",
+                  "secondaryAxis": false,
+                  "scatterPlotSource": "Y",
+                  "querybuilderSerialization": "{\"_v\":1,\"metric\":\"\",\"filters\":[[],\"and\"],\"functions\":[]}",
+                  "querybuilderEnabled": true,
+                  "sourceDescription": ""
+                }
+              ],
+              "noDefaultEvents": false
+            }
+          ],
+          "heightFactor": 120
+        }
+      ],
+      "name": "Overview"
+    },
+    {
+      "rows": [
+        {
+          "charts": [
+            {
+              "chartSettings": {
+                "y1ScaleSIBy1024": false,
+                "fixedLegendEnabled": false,
+                "fixedLegendFilterField": "CURRENT",
+                "y0ScaleSIBy1024": false,
+                "sparklineDisplayFontSize": "200",
+                "fixedLegendFilterLimit": 5,
+                "sparklineValueColorMapColors": [],
+                "fixedLegendPosition": "RIGHT",
+                "customTags": [],
+                "lineType": "linear",
+                "sparklineValueColorMapApplyTo": "TEXT",
+                "windowing": "full",
+                "sparklineSize": "NONE",
+                "fixedLegendFilterSort": "TOP",
+                "sparklineValueColorMapValuesV2": [],
+                "y1Units": "",
+                "sparklineDisplayValueType": "VALUE",
+                "type": "sparkline",
+                "y1UnitAutoscaling": false,
+                "sparklineValueTextMapText": [
+                  "new highest"
+                ],
+                "tagMode": "all",
+                "fixedLegendUseRawStats": false,
+                "y0UnitAutoscaling": false,
+                "fixedLegendDisplayStats": [
+                  "CURRENT"
+                ],
+                "sparklineDisplayHorizontalPosition": "MIDDLE",
+                "sparklineDecimalPrecision": 0,
+                "autoColumnTags": false,
+                "numTags": 4,
+                "sparklineDisplayColor": null,
+                "sparklineLineColor": null,
+                "sparklineFillColor": null
+              },
+              "includeObsoleteMetrics": false,
+              "interpolatePoints": false,
+              "name": "",
+              "units": "",
+              "summarization": "MEAN",
+              "base": 0,
+              "chartAttributes": {
+                "singleStat": {
+                  "sparklineDisplayLabel": "A",
+                  "sparklineDisplaySubLabel": "RUNNING SERVICES"
+                },
+                "dashboardLayout": {
+                  "x": 0,
+                  "y": 0,
+                  "h": 8,
+                  "w": 4
+                }
+              },
+              "sources": [
+                {
+                  "name": "A",
+                  "query": "count(mavg(5m, ts(aws.ecs.cpuutilization, ClusterName=${ECSCluster})))",
+                  "disabled": false,
+                  "secondaryAxis": false,
+                  "querybuilderEnabled": false,
+                  "sourceDescription": ""
+                }
+              ],
+              "noDefaultEvents": false
+            },
+            {
+              "chartSettings": {
+                "y1ScaleSIBy1024": false,
+                "fixedLegendEnabled": false,
+                "fixedLegendFilterField": "CURRENT",
+                "y0ScaleSIBy1024": false,
+                "fixedLegendFilterLimit": 5,
+                "fixedLegendPosition": "RIGHT",
+                "customTags": [
+                  "ServiceName"
+                ],
+                "showRawValues": false,
+                "lineType": "linear",
+                "showHosts": true,
+                "groupBySource": false,
+                "windowing": "full",
+                "fixedLegendFilterSort": "TOP",
+                "y1Units": "",
+                "sortValuesDescending": true,
+                "type": "table",
+                "y1UnitAutoscaling": false,
+                "tagMode": "custom",
+                "fixedLegendUseRawStats": false,
+                "y0UnitAutoscaling": false,
+                "fixedLegendDisplayStats": [
+                  "CURRENT"
+                ],
+                "autoColumnTags": false,
+                "numTags": 4,
+                "sparklineDisplayColor": null,
+                "sparklineLineColor": null,
+                "sparklineFillColor": null
+              },
+              "includeObsoleteMetrics": false,
+              "interpolatePoints": false,
+              "name": "Average CPU Utilization (last 5 mins)",
+              "units": "%",
+              "summarization": "MEAN",
+              "base": 0,
+              "chartAttributes": {
+                "dashboardLayout": {
+                  "x": 4,
+                  "y": 0,
+                  "h": 8,
+                  "w": 4
+                }
+              },
+              "sources": [
+                {
+                  "name": "A",
+                  "query": "mavg(5m, ts(aws.ecs.cpuutilization, ClusterName=${ECSCluster}))",
+                  "disabled": false,
+                  "secondaryAxis": false,
+                  "querybuilderEnabled": false,
+                  "sourceDescription": ""
+                }
+              ],
+              "noDefaultEvents": false
+            },
+            {
+              "chartSettings": {
+                "y1ScaleSIBy1024": false,
+                "fixedLegendEnabled": false,
+                "fixedLegendFilterField": "CURRENT",
+                "y0ScaleSIBy1024": false,
+                "fixedLegendFilterLimit": 5,
+                "fixedLegendPosition": "RIGHT",
+                "customTags": [
+                  "ServiceName"
+                ],
+                "showRawValues": false,
+                "lineType": "linear",
+                "showHosts": true,
+                "groupBySource": false,
+                "windowing": "full",
+                "fixedLegendFilterSort": "TOP",
+                "y1Units": "",
+                "sortValuesDescending": true,
+                "type": "table",
+                "y1UnitAutoscaling": false,
+                "tagMode": "custom",
+                "fixedLegendUseRawStats": false,
+                "y0UnitAutoscaling": false,
+                "fixedLegendDisplayStats": [
+                  "CURRENT"
+                ],
+                "autoColumnTags": false,
+                "numTags": 4,
+                "sparklineDisplayColor": null,
+                "sparklineLineColor": null,
+                "sparklineFillColor": null
+              },
+              "includeObsoleteMetrics": false,
+              "interpolatePoints": false,
+              "name": "Average Memory Utilization (last 5 mins)",
+              "units": "%",
+              "summarization": "MEAN",
+              "base": 0,
+              "chartAttributes": {
+                "dashboardLayout": {
+                  "x": 8,
+                  "y": 0,
+                  "h": 8,
+                  "w": 4
+                }
+              },
+              "sources": [
+                {
+                  "name": "A",
+                  "query": "mavg(5m, ts(aws.ecs.memoryutilization, ClusterName=${ECSCluster}))",
+                  "disabled": false,
+                  "secondaryAxis": false,
+                  "querybuilderEnabled": false,
+                  "sourceDescription": ""
+                }
+              ],
+              "noDefaultEvents": false
+            }
+          ],
+          "heightFactor": 160
+        }
+      ],
+      "name": "Services"
+    }
+  ],
+  "parameterDetails": {
+    "AWSAccountID": {
+      "parameterType": "SIMPLE",
+      "order": 1,
+      "defaultValue": "Label",
+      "hideFromView": false,
+      "value": "<your AWS Account ID>",
+      "label": "AWS Account ID",
+      "valuesToReadableStrings": {
+        "Label": "<your AWS Account ID>"
+      }
+    },
+    "ECSCluster": {
+      "parameterType": "SIMPLE",
+      "order": 2,
+      "defaultValue": "Label",
+      "hideFromView": false,
+      "value": "<your CF stack name>",
+      "label": "ECS Cluster",
+      "valuesToReadableStrings": {
+        "Label": "<your CF stack name>"
+      }
+    }
+  }
+}
