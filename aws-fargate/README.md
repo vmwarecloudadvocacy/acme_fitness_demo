@@ -91,3 +91,9 @@ To delete a stack you've built, run
 aws cloudformation delete-stack \
 --stack-name mystack
 ```
+
+## Monitoring the stack
+
+Optionally, you can use [Wavefront](https://wavefront.com) to monitor your stack. To get started, we've added a sample dashboard (`wavefront.json`). To use this dashboard, first create a new dashboard ans select the **JSON** button on the top right hand side of the screen. In that window, you can copy/paste the contents of `wavefront.json` (just be sure to update the variables _AWS Account ID_ and _ECS Cluster_).
+
+![dashboard](./wavefront.png)
