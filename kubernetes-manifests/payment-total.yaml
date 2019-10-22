@@ -36,7 +36,7 @@ spec:
         service: payment
     spec:
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-payment:1.0.0
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-payment:stable
         name: payment
         env:
         - name: PAYMENT_PORT
