@@ -50,12 +50,12 @@ spec:
           - name: MONGODB_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: catalog-mongo-pass
+                name: order-mongo-pass
                 key: password
           - name: MONGODB_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: catalog-mongo-pass
+                name: order-mongo-pass
                 key: password
           volumeMounts:
             - mountPath: /bitnami
