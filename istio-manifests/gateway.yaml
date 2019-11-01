@@ -28,6 +28,6 @@ spec:
         prefix: /
     route:
     - destination:
-        host: frontend
+        host: shopping
         port:
           number: 3000 
