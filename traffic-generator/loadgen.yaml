@@ -11,7 +11,8 @@ spec:
   ports:
     - name: loadgen
       protocol: TCP
-      port: 8089
+      port: 80
+      targetPort: 8089
   selector:
     app: loadgenerator
 ---
