@@ -16,7 +16,7 @@ Before deploying the cart datastore (Redis) and cart service please add a secret
 *Note: Please replace 'value' in the command below with the desired password text. Changing the name of the secret object or the 'password' key may cause deployment issues*
 
 ```
-kubectl create secret generic redis-pass --from-literal=password=<value>
+kubectl create secret generic cart-redis-pass --from-literal=password=<value>
 ```
 
 Once the secret object is created, deploy the redis cache and cart service:
