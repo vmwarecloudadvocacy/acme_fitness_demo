@@ -47,7 +47,7 @@ spec:
         - name: REDIS_PASS
           valueFrom:
             secretKeyRef:
-              name: redis-pass
+              name: cart-redis-pass
               key: password
         - name: REDIS_PORT
           value: '6379'
