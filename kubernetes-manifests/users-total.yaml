@@ -40,6 +40,7 @@ spec:
         emptyDir: {}
       containers:
       - image: gcr.io/vmwarecloudadvocacy/acmeshop-user:latest
+        imagePullPolicy: "Always"
         name: users
         env:
         - name: USERS_DB_HOST

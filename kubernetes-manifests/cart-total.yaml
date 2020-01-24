@@ -39,7 +39,8 @@ spec:
       - name: acmefit-cart-data
         emptyDir: {}
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-cart:latest
+      - image: gcr.io/vmwarecloudadvocacy/cart-test:latest
+        imagePullPolicy: "Always"
         name: cart
         env:
         - name: REDIS_HOST

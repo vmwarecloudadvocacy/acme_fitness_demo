@@ -36,8 +36,6 @@ spec:
       containers:
         - name: cart-redis
           image: bitnami/redis
-          command:
-            - "redis-server"
           imagePullPolicy: Always
           resources:
             requests:

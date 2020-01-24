@@ -41,7 +41,7 @@ spec:
       containers:
       - name: postgres
         image: postgres:9.5
-        imagePullPolicy: "IfNotPresent"
+        imagePullPolicy: "Always"
         ports:
         - containerPort: 5432
           name: order-postgres

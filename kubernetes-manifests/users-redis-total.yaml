@@ -34,9 +34,7 @@ spec:
     spec:
       containers:
         - name: users-redis
-          image: bitnami/redis:latest
-          command:
-            - "redis-server"
+          image: bitnami/redis
           imagePullPolicy: Always
           resources:
             requests:
