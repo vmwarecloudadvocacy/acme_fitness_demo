@@ -64,7 +64,7 @@ Before deploying the orders datastore (mongo) and order service please add a sec
 Before running order please add the following secret:
 
 ```
-kubectl create secret generic order-mongo-pass --from-literal=password=<value>
+kubectl create secret generic order-postgres-pass --from-literal=password=<value>
 ```
 
 Once the secret object is created, deploy the mongo instance and order service:
@@ -83,6 +83,7 @@ Before running order please add the following secret:
 
 ```
 kubectl create secret generic users-mongo-pass --from-literal=password=<value>
+kubectl create secret generic users-redis-pass --from-literal=password=<value>
 ```
 
 Next you need to run the following to initialize the database with an initial set of users:
@@ -95,6 +96,7 @@ Once the secret object is created, and the users database is seeded, deploy the 
 
 ```
 kubectl apply -f users-db-total.yaml
+kubectl apply -f users-redis-total.yaml
 kubectl apply -f users-total.yaml
 ```
 

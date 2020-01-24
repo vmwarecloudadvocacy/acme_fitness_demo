@@ -9,7 +9,7 @@ spec:
   ports:
     - name: http-users
       protocol: TCP
-      port: 8081
+      port: 8083
   selector:
     app: acmefit
     service: users
@@ -39,7 +39,8 @@ spec:
       - name: acmefit-users-data
         emptyDir: {}
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-user:stable
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-user:latest
+        imagePullPolicy: "Always"
         name: users
         env:
         - name: USERS_DB_HOST
@@ -54,9 +55,22 @@ spec:
         - name: USERS_DB_USERNAME
           value: 'mongoadmin'
         - name: USERS_PORT
-          value: '8081'
+          value: '8083'
+        - name: REDIS_HOST
+          value: 'users-redis'
+        - name: REDIS_PORT
+          value: '6379'
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: users-redis-pass
+              key: password
+        - name: JAEGER_AGENT_HOST
+          value: 'localhost'
+        - name: JAEGER_AGENT_PORT
+          value: '6831'
         ports:
-        - containerPort: 8081
+        - containerPort: 8083
           name: users
         volumeMounts:
         - mountPath: "/data"

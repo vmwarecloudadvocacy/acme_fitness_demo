@@ -4,7 +4,7 @@ metadata:
   name: users-mongo
   labels:
     app: acmefit
-    service: users-db
+    service: users-mongo
 spec:
   ports:
     - port: 27017
@@ -12,7 +12,7 @@ spec:
       protocol: TCP
   selector:
     app: acmefit
-    service: users-db
+    service: users-mongo
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -20,18 +20,18 @@ metadata:
   name: users-mongo
   labels:
     app: acmefit
-    service: users-db
+    service: users-mongo
 spec:
   selector:
     matchLabels:
       app: acmefit  # has to match .spec.template.metadata.labels
-      service: users-db
+      service: users-mongo
   replicas: 1
   template:
     metadata:
       labels:
         app: acmefit  # has to match .spec.selector.matchLabels
-        service: users-db
+        service: users-mongo
     spec:
       containers:
         - name: users-mongo

@@ -39,20 +39,30 @@ spec:
       - name: acmefit-order-data
         emptyDir: {}
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-order:stable
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-order:latest
+        # orderpostgres:latest
         name: order
         env:
         - name: ORDER_DB_HOST
-          value: 'order-mongo'
+          value: order-postgres
         - name: ORDER_DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: order-mongo-pass
+              name: order-postgres-pass
               key: password
         - name: ORDER_DB_PORT
-          value: '27017'
+          value: '5432'
+        - name: AUTH_MODE
+          value: "1"
         - name: ORDER_DB_USERNAME
-          value: 'mongoadmin'
+          value: pgbench
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: order-postgres-pass
+              key: password
+        - name: ORDER_AUTH_DB
+          value: postgres
         - name: ORDER_PORT
           value: '6000'
         - name: PAYMENT_PORT

@@ -39,7 +39,7 @@ spec:
         service: frontend
     spec:
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end:stable
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end:latest
         name: frontend
         env:
         - name: FRONTEND_PORT
@@ -53,13 +53,17 @@ spec:
         - name: CART_HOST
           value: 'cart'
         - name: USERS_PORT
-          value: '8081'
+          value: '8083'
         - name: CATALOG_PORT
           value: '8082'
         - name: CART_PORT
           value: '5000'
         - name: ORDER_PORT
           value: '6000'
+        - name: JAEGER_AGENT_HOST
+          value: 'localhost'
+        - name: JAEGER_AGENT_PORT
+          value: '6832'
         ports:
         - containerPort: 3000
           name: frontend

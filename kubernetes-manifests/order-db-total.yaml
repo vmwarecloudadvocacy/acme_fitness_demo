@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: order-mongo
+  name: order-postgres
   labels:
     app: acmefit
     service: order-db
 spec:
   ports:
-    - port: 27017
-      name: mongo-order
+    - port: 5432
+      name: postgres-order
       protocol: TCP
   selector:
     app: acmefit
@@ -17,45 +17,53 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: order-mongo
+  name: order-postgres
   labels:
     app: acmefit
     service: order-db
 spec:
   selector:
     matchLabels:
-      app: acmefit  # has to match .spec.template.metadata.labels
+      app: acmefit
       service: order-db
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
   replicas: 1
   template:
     metadata:
       labels:
-        app: acmefit  # has to match .spec.selector.matchLabels
+        app: acmefit
         service: order-db
     spec:
       containers:
-        - name: order-mongo
-          image: mongo:4
-          resources:
-            {}
-          ports:
-            - name: order-mongo
-              containerPort: 27017
-              protocol: "TCP"
-          env:
-          - name: MONGO_INITDB_ROOT_USERNAME
-            value: 'mongoadmin'
-          - name: MONGO_INITDB_ROOT_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: order-mongo-pass
-                key: password
-          volumeMounts:
-            - mountPath: /data/db
-              name: mongodata
+      - name: postgres
+        image: postgres:9.5
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 5432
+          name: order-postgres
+          protocol: "TCP"
+        env:
+        - name: POSTGRES_USER
+          value: pgbench
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: order-postgres-pass
+              key: password
+        - name: PGBENCH_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: order-postgres-pass
+              key: password
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgredb
       volumes:
-        - name: mongodata
-          emptyDir: {}
-#        - name: mongodata
-#          persistentVolumeClaim:
-#            claimName: mongodata
+      - name: postgredb
+        emptyDir: {}
