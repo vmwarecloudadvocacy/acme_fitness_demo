@@ -39,7 +39,7 @@ spec:
       - name: acmefit-order-data
         emptyDir: {}
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/order-postgres-tracing:latest
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-order:latest
         # orderpostgres:latest
         name: order
         env:

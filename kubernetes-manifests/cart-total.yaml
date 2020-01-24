@@ -39,7 +39,7 @@ spec:
       - name: acmefit-cart-data
         emptyDir: {}
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/cart-test:latest
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-cart:latest
         imagePullPolicy: "Always"
         name: cart
         env:

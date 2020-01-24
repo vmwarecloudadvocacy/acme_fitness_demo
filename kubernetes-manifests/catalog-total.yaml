@@ -39,7 +39,7 @@ spec:
       - name: acmefit-catalog-data
         emptyDir: {}
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog:beta-2
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog:latest
         imagePullPolicy: "Always"
         name: catalog
         env:
