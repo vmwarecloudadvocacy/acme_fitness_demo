@@ -63,7 +63,7 @@ spec:
         - name: JAEGER_AGENT_PORT
           value: '6831'
         - name: AUTH_MODE
-          value: '0'
+          value: '1'
         ports:
         - containerPort: 5000
           name: cart
