@@ -39,7 +39,7 @@ spec:
       - name: acmefit-users-data
         emptyDir: {}
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-user:latest
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-user:beta-2
         imagePullPolicy: "Always"
         name: users
         env:
@@ -56,11 +56,11 @@ spec:
           value: 'mongoadmin'
         - name: USERS_PORT
           value: '8083'
-        - name: REDIS_DB_HOST
+        - name: REDIS_HOST
           value: 'users-redis'
-        - name: REDIS_DB_PORT
+        - name: REDIS_PORT
           value: '6379'
-        - name: REDIS_DB_PASSWORD
+        - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
               name: users-redis-pass
