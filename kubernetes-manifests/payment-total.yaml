@@ -36,11 +36,19 @@ spec:
         service: payment
     spec:
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-payment:stable
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-payment:latest
         name: payment
         env:
         - name: PAYMENT_PORT
           value: '9000'
+        - name: USERS_HOST
+          value: 'users'
+        - name: USERS_PORT
+          value: '8083'
+        - name: JAEGER_AGENT_HOST
+          value: 'localhost'
+        - name: JAEGER_AGENT_PORT
+          value: '6832'
         ports:
         - containerPort: 9000
           name: payment

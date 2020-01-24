@@ -39,20 +39,30 @@ spec:
       - name: acmefit-cart-data
         emptyDir: {}
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-cart:stable
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-cart:latest
         name: cart
         env:
         - name: REDIS_HOST
           value: 'cart-redis'
-        - name: REDIS_PASS
+        - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: redis-pass
+              name: cart-redis-pass
               key: password
         - name: REDIS_PORT
           value: '6379'
         - name: CART_PORT
           value: '5000'
+        - name: USER_HOST
+          value: 'users'
+        - name: USER_PORT
+          value: '8083'
+        - name: JAEGER_AGENT_HOST
+          value: 'localhost'
+        - name: JAEGER_AGENT_PORT
+          value: '6831'
+        - name: AUTH_MODE
+          value: '0'
         ports:
         - containerPort: 5000
           name: cart
