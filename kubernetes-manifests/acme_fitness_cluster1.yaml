@@ -185,7 +185,7 @@ spec:
         - name: USERS_HOST
           value: 'users'
         - name: CATALOG_HOST
-          value: 'catalog.aaron.test'
+          value: 'catalog.acme.com'
         - name: ORDER_HOST
           value: 'order'
         - name: CART_HOST
