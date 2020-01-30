@@ -177,7 +177,7 @@ spec:
         service: shopping
     spec:
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end:1.0.0
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end:latest
         name: shopping
         env:
         - name: FRONTEND_PORT
