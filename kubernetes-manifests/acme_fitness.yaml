@@ -268,7 +268,7 @@ spec:
       - name: catalog-data
         emptyDir: {}
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog:latest
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog:rel1
         name: catalog
         env:
         - name: CATALOG_DB_HOST
@@ -336,7 +336,7 @@ spec:
         service: shopping
     spec:
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end:1.0.0
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-front-end:rel1
         name: shopping
         env:
         - name: FRONTEND_PORT
