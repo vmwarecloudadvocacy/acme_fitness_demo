@@ -128,7 +128,7 @@ spec:
       - name: catalog-data
         emptyDir: {}
       containers:
-      - image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog:latest
+      - image: gcr.io/vmwarecloudadvocacy/acmeshop-catalog:rel1
         name: catalog
         env:
         - name: CATALOG_DB_HOST
