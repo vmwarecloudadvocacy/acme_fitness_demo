@@ -73,6 +73,10 @@ spec:
           value: 'users'
         - name: USER_PORT
           value: '8083'
+        - name: JAEGER_AGENT_HOST
+          value: 'localhost'
+        - name: JAEGER_AGENT_PORT
+          value: '6831'
         ports:
         - containerPort: 6000
           name: order
