@@ -19,7 +19,7 @@ kind: Service
 metadata:
   name: catalog-mongo-v2
   labels:
-    app: catalog-db-total-v2
+    app: catalog-db-v2
     service: catalog-db-v2
 spec:
   ports:
@@ -27,7 +27,7 @@ spec:
       name: mongo-catalog
       protocol: TCP
   selector:
-    app: catalog-db-total-v2
+    app: catalog-db-v2
     service: catalog-db-v2
 ---
 apiVersion: apps/v1
@@ -35,18 +35,18 @@ kind: Deployment
 metadata:
   name: catalog-mongo-v2
   labels:
-    app: catalog-db-total
+    app: catalog-db-v2
     service: catalog-db-v2
 spec:
   selector:
     matchLabels:
-      app: catalog-db-total-v2  # has to match .spec.template.metadata.labels
+      app: catalog-db-v2  # has to match .spec.template.metadata.labels
       service: catalog-db-v2
   replicas: 1
   template:
     metadata:
       labels:
-        app: catalog-db-total-v2  # has to match .spec.selector.matchLabels
+        app: catalog-db-v2  # has to match .spec.selector.matchLabels
         service: catalog-db-v2
     spec:
       containers:
@@ -88,13 +88,13 @@ kind: Deployment
 metadata:
   name: catalog-v2
   labels:
-    app: catalog-total
+    app: catalog
     service: catalog
     version: v2
 spec:
   selector:
     matchLabels:
-      app: catalog-total
+      app: catalog
       service: catalog
       version: v2
   strategy:
@@ -103,7 +103,7 @@ spec:
   template:
     metadata:
       labels:
-        app: catalog-total
+        app: catalog
         service: catalog
         version: v2
     spec:
