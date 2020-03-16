@@ -131,6 +131,32 @@ frontend   NodePort   10.0.0.81    <none>        3000:30430/TCP   3d
 
 The external value appears under 'PORT(S)'. It is after the '3000:' and before the '/TCP' portion of the string. Appending it to the public address of the Kubernetes cluster (or loadbalancer fronting the cluster) to access the site.
 
+### Point-of-Sales
+
+Just like the front end service, the Point-of-Sales app functions without any associated datastores. The only prerequisite is that the FrontEnd service is deployed. The manifests in this repository deploy the Point-of-Sales service as a NodePort type for testing purposes. If you're running the Point-of-Sales app on a different Kubernetes cluster, or as a standalone container, you'll have to update the value of `FRONTEND_HOST` (set to `frontend.default.svc.cluster.local` by default) to match the IP or FQDN of the front end service.
+
+To deploy the service, run the following command:
+
+```
+kubectl apply -f point-of-sales-total.yaml
+```
+
+To find the external port on which to access the site in browser, run the following command:
+
+```
+kubectl get services -l service=pos
+```
+
+The output of the above command should be similar to this:
+
+```
+$ kubectl get services -l service=frontend
+NAME       TYPE       CLUSTER-IP   EXTERNAL-IP   PORT(S)          AGE
+pos        NodePort   10.0.0.81    <none>        3000:30431/TCP   3d
+```
+
+The external value appears under 'PORT(S)'. It is after the '3000:' and before the '/TCP' portion of the string. Appending it to the public address of the Kubernetes cluster (or loadbalancer fronting the cluster) to access the Point-of-Sales app.
+
 ## Distributed Tracing
 
 **Note: Distributed tracing is advanced functionality which requires additional configuration to use successfully. Please read this section carefully before attempting to test / demonstrate tracing**
