@@ -1,0 +1,61 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loadgen
+  labels:
+    app: loadgenerator
+    service: loadgen
+spec:
+  type: ClusterIP
+  ports:
+    - name: loadgen
+      protocol: TCP
+      port: 80
+      targetPort: 8089
+  selector:
+    app: loadgenerator
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loadgenerator
+spec:
+  selector:
+    matchLabels:
+      app: loadgenerator
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: loadgenerator
+    spec:
+      terminationGracePeriodSeconds: 5
+      restartPolicy: Always
+      initContainers:
+      - name: wait-frontend
+        image: alpine:3.7
+        command: ['sh', '-c', 'echo -e "http://nl.alpinelinux.org/alpine/v3.5/main\nhttp://nl.alpinelinux.org/alpine/v3.5/community" > /etc/apk/repositories' , 'set -x;  apk update ; apk add curl && 
+          until timeout -t 2 curl -f "http://${FRONTEND_ADDR}"; do 
+            echo "waiting for http://${FRONTEND_ADDR}"; 
+            sleep 2;
+          done;']
+        env:
+        - name: FRONTEND_ADDR
+          value: "shopping:80"
+      containers:
+      - name: main
+        image: docker.io/vmwareallspark/acme-load-gen:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8089
+        env:
+        - name: FRONTEND_ADDR
+          value: "shopping:80"
+        resources:
+          requests:
+            cpu: 300m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
