@@ -163,6 +163,6 @@ The external value appears under 'PORT(S)'. It is after the '3000:' and before t
 
 The current version of the application has been augmented with distributed tracing funcionality. Each of the services has two relevant environment vairables `JAEGER_AGENT_HOST` and `JAEGER_AGENT_PORT`. Regardless of the span aggregator being used, the code expects that these two values to be populates with the hostname and port of whichever span collecter is being used *likely the jaeger agent*.
 
-To avoid issues with unresolvable hostnames, `JAEGER_AGENT_HOST` is set to `localhost` in all of the manifests in this repo. To use tracing, this value will need to be replaced. If using the `jaeger-all-in-one.yml` manifest included in this repo, this value should be changed to `<jaeger namespace>.jaeger`.
+To avoid issues with unresolvable hostnames, `JAEGER_AGENT_HOST` is set to `localhost` in all of the manifests in this repo. To use tracing, this value will need to be replaced. If using the `jaeger-all-in-one.yml` manifest included in this repo, this value should be changed to `jaeger.<jaeger namespace>`.
 
 It is strongly recommended that the `JAEGER_AGENT_PORT` values not be modified as the tracing library implementations for specific languages favor certain ports.
