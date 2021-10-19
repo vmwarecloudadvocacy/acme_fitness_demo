@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: acme-locust
+spec:
+  selector:
+    matchLabels:
+      app: acme-locust
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: acme-locust
+    spec:
+      terminationGracePeriodSeconds: 5
+      restartPolicy: Always
+      volumes:
+      - name: acme-locustfile-shaped
+        configMap:
+          name: acme-locustfile-shaped
+      containers:
+      - name: main
+        image: docker.io/locustio/locust:2.4.1
+        imagePullPolicy: IfNotPresent
+        workingDir: /mnt/locust 
+        env:
+        - name: FRONTEND_ADDR
+          value: "shopping:3000"
+        command:
+        - locust
+        args:
+        - -f
+        - shape.py
+        - --headless
+        - --host=http://$(FRONTEND_ADDR)
+        resources:
+          requests:
+            cpu: 300m
+            memory: 180Mi
+          limits:
+            cpu: 2000m
+            memory: 256Mi
+        volumeMounts:
+        - name: acme-locustfile-shaped
+          mountPath: /mnt/locust/

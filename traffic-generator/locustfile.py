@@ -1,95 +1,79 @@
 # This program will generate traffic for ACME Fitness Shop App. It simulates both Authenticated and Guest user scenarios. You can run this program either from Command line or from
 # the web based UI. Refer to the "locust" documentation for further information. 
-
-from locust import HttpLocust, TaskSet, task, TaskSequence, seq_task, Locust
+from time import sleep
+from locust import HttpUser, task, SequentialTaskSet, between
 import random
-
-# List of users (pre-loaded into ACME Fitness shop)
-users = ["eric", "phoebe", "dwight", "han"] 
-
-# List of products within the catalog
-products = []
-
 import logging
 
-# GuestUserBrowsing simulates traffic for a Guest User (Not logged in)
-class GuestUserBrowsing(TaskSequence):
+# List of users (pre-loaded into ACME Fitness shop)
+users = ["eric", "phoebe", "dwight", "han", "elaine", "walter"]
 
+# GuestUserBrowsing simulates traffic for a Guest User (Not logged in)
+class UserBrowsing(SequentialTaskSet):
     def on_start(self):
         self.getProducts()
-
     def listCatalogItems(self):
-        items = self.client.get("/products").json()["data"]
-        for item in items:
-            products.append(item["id"])
+        products = []
+        response = self.client.get("/products")
+        if response.ok:
+            items = response.json()["data"]
+            for item in items:
+                products.append(item["id"])
         return products
+    def getProductDetails(self, id):
+        """Get details of a specific product"""
+        details = {}
+        response = self.client.get("/products/"+id)
+        if response.ok:
+            details = response.json()["data"]
+            logging.debug("getProductDetails: " + str(details))
+        return details
+    def getProductImages(self,id):
+        """Gets all three image URLs for a product"""
+        details = self.getProductDetails(id)
+        if details:
+            for x in range(1, 4):
+                self.client.get(details["imageUrl"+str(x)])
+    def getProductName(self, id):
+        name = ""
+        details = self.getProductDetails(id)
+        if details:
+            name = details["name"]
+        logging.debug("NAME: "+name+ " for id: "+id)
+        return name
 
-    @task(1)
+    @task
     def getProducts(self):
-        logging.info("Guest User - Get Products")
+        logging.debug("User - Get Products")
         self.client.get("/products")
-
     @task(2)
     def getProduct(self):
-        logging.info("Guest User - Get a product")
+        """Get details of a specific product"""
+        logging.debug("User - Get a product")
         products = self.listCatalogItems()
         id = random.choice(products)
-        product = self.client.get("/products/"+ id).json()
-        logging.info("Product info - " +  str(product))
-        products.clear()
+        response = self.client.get("/products/"+ id)
+        if response.ok:
+            product = response.json()
+            logging.debug("Product info - " +  str(product))
+    @task
+    def getImages(self):
+        """Get images of a random product"""
+        logging.debug("User - Get images of random product")
+        products = self.listCatalogItems()
+        id = random.choice(products)
+        self.getProductImages(id)
+    @task(2)
+    def index(self):
+        self.client.get("/")
 
 # AuthUserBrowsing simulates traffic for Authenticated Users (Logged in)
-class AuthUserBrowsing(TaskSequence):
-
-    def on_start(self):
-        self.login()
-    
-    @seq_task(1)
-    @task(1)
-    def login(self):
-        user = random.choice(users)
-        logging.info("Auth User - Login user " + user)
-        body = self.client.post("/login/", json={"username": user, "password":"vmware1!"}).json()
-        self.locust.userid = body["token"]
-
-    @seq_task(2)
-    @task(1)
-    def getProducts(self):
-        logging.info("Auth User - Get Catalog")
-        self.client.get("/products")
-
-    @seq_task(3)
-    @task(2)
-    def getProduct(self):
-        logging.info("Auth User - Get a product")
-        products = self.listCatalogItems()
-        id = random.choice(products)
-        product = self.client.get("/products/"+ id).json()
-        logging.info("Product info - " +  str(product))
-        products.clear()
-
-    
-    @seq_task(4)
-    @task(2)
-    def addToCart(self):
-        self.listCatalogItems()
-        productid = random.choice(products)
-        logging.info("Add to Cart for user " + self.locust.userid)
-        cart = self.client.post("/cart/item/add/" + self.locust.userid, json={
-                  "name": productid,
-                  "price": "100",
-                  "shortDescription": "Test add to cart",
-                  "quantity": random.randint(1,2),
-                  "itemid": productid
-                })
-        products.clear()
-
-    
-    @seq_task(5)
-    @task(1)
-    def checkout(self):
-        userCart = self.client.get("/cart/items/" + self.locust.userid).json()
-        order = self.client.post("/order/add/"+ self.locust.userid, json={ "userid":"8888",
+class AuthUserBrowsing(UserBrowsing):
+    """
+    AuthUserBrowsing extends the base UserBrowsing class as an authenticated user 
+    interacting with the cart and making orders
+    """
+    Order_Info = { "userid":"8888",
                 "firstname":"Eric",
                 "lastname": "Cartman",
                 "address":{
@@ -111,31 +95,62 @@ class AuthUserBrowsing(TaskSequence):
                     {"id":"1234", "description":"redpants", "quantity":"1", "price":"4"},
                     {"id":"5678", "description":"bluepants", "quantity":"1", "price":"4"}
                 ],
-                "total":"100"})
+                "total":"100"}
 
+    def on_start(self):
+        self.login()
+    def removeProductFromCart(self, userid, productid):
+        """Removes a specific product from the cart by setting the quantity of the product to 0"""
+        response = self.client.post("/cart/item/modify/"+userid, json={"itemid": productid, "quantity": 0})
+        if response.ok:
+            logging.debug("Auth User - Removed item: "+productid+" for user: "+userid)
+        else:
+            logging.warning("failed to remove cart entry. item: "+productid+" for user: "+userid)
 
-    def listCatalogItems(self):
-        items = self.client.get("/products").json()["data"]
-        for item in items:
-            products.append(item["id"])
-        return products
-
+    @task
+    def login(self):
+        """Login a random user"""
+        user = random.choice(users)
+        logging.debug("Auth User - Login user " + user)
+        response = self.client.post("/login/", json={"username": user, "password":"vmware1!"})
+        if response.ok:
+            body = response.json()
+            self.user.userid = body["token"]
     @task(2)
-    def index(self):
-        self.client.get("/")
-
-
-class UserBehavior(TaskSet):
-
-    tasks = {AuthUserBrowsing:2, GuestUserBrowsing:1}
-
-
-class WebSiteUser(HttpLocust):
-
-    task_set = UserBehavior
+    def addToCart(self):
+        """Randomly adds 1 or 2 of a random product to the cart"""
+        products = self.listCatalogItems()
+        productid = random.choice(products)
+        if not self.user.userid:
+            logging.warning("Not logged in, skipping 'Add to Cart'")
+            return
+        logging.debug("Add to Cart for user " + self.user.userid)
+        details = self.getProductDetails(productid)
+        cart = self.client.post("/cart/item/add/" + self.user.userid, json={
+                  "name": details["name"],
+                  "price": details["price"],
+                  "shortDescription": "Test add to cart",
+                  "quantity": random.randint(1,2),
+                  "itemid": productid
+                })
+    @task
+    def removeFromCart(self):
+        """Remove a random product from the cart. Helps prevent the cart from overflowing"""
+        products = self.listCatalogItems()
+        productid = random.choice(products)
+        self.removeProductFromCart(self.user.userid, productid)
+    @task
+    def checkout(self):
+        if not self.user.userid:
+            logging.warning("Not logged in, skipping 'Add to Checkout'")
+            return
+        userCart = self.client.get("/cart/items/" + self.user.userid).json()
+        order = self.client.post("/order/add/"+ self.user.userid, json=self.Order_Info)
+class UserBehavior(SequentialTaskSet):
+    tasks = [AuthUserBrowsing, UserBrowsing]
+class WebSiteUser(HttpUser):
+    sleep(3)  # Sleep on start of a user incase the target app isn't completely accessible yet.
+    tasks = [UserBehavior]
     userid = ""
-    min_wait = 2000
-    max_wait = 10000
-    
-
+    wait_time = between(0.5, 3)
 
