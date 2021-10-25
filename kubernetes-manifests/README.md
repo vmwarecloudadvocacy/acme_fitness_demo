@@ -8,6 +8,8 @@ This app is developed by team behind www.cloudjourney.io
 
 The current version of the application passes JSON Web Tokens (JWT) for authentication on certain API calls. The application will not work as expected if the `users` service is not present to issue / authenticate these tokens.
 
+Optionally, you may use the Jupyter Notebook located here https://github.com/vmwarecloudadvocacy/acme_fitness_demo/blob/master/kubernetes-manifests/acmefit-notebook.ipynb
+
 ## Datastore Dependent Services
 
 This section covers the deployment of the datastore dependent microservices. It is recommended to deploy these services first.
